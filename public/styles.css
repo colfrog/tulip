@@ -1,0 +1,43 @@
+* {
+    margin: 0
+}
+header {
+    display: flex;
+    color: white;
+    background-color: red;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+header img {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+}
+#headerText {
+    text-align: center;
+}
+#icons {
+    display: flex;
+    flex-direction: column;
+}
+#icons img {
+    width: 32px;
+    height: auto;
+    border-radius: 0;
+}
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    color: white;
+    background-color: blue;
+    text-align: right;
+    padding: 0 100px;
+    height: 40px;
+}
+
+#content {
+    min-height: calc(100vh - 100px - 40px);
+    background-color: green;
+}

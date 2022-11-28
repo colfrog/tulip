@@ -1,0 +1,93 @@
+{% extends "laurent/layout" %}
+
+{% block title %}Blog{% endblock title %}
+
+{% block style %}
+<style>
+  #blog-content {
+      margin: 100px 30%;
+  }
+
+  .post-content {
+      display: block;
+      margin: 40px;
+      text-align: left;
+  }
+
+  .post {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+
+      margin: 50px 0;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div id="blog-content">
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  document.querySelector("#nav-blog").className = "activated";
+  fetch("/blog/laurent")
+    .then(response => response.json())
+    .then(json => {
+	let blogContent = document.querySelector("#blog-content");
+	json.forEach(post => {
+	    blogContent.innerHTML += `
+<div id="${postURL(post.title)}" class="post post${post.id}">
+  <button onclick="togglePost(${post.id})">${post.title}</button>
+  <h5>${post.submitted}</h5>
+</div>
+`;
+	});
+	
+	return json;
+    })
+    .then(json => {
+	json.forEach(post => {
+	    if (location.href.endsWith(`#${postURL(post.title)}`))
+		togglePost(post.id);
+	});
+    });
+  
+  const punctuation = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+  function removePunctuation(string) {
+      return string
+	  .split('')
+	  .filter(function(letter) {
+	      return punctuation.indexOf(letter) === -1;
+	  })
+	  .join('');
+  }
+  
+  function postURL(title) {
+      let url = title.toLowerCase();
+      url = removePunctuation(url);
+      url = url.replaceAll(' ', '-');
+      return url;
+  }
+
+  function togglePost(id) {
+      console.log("Toggle post called", id);
+      let post = document.querySelector(`.post${id}`);
+      let content = document.querySelector(`#content${id}`);
+      if (!content)
+	  fetch(`/blog/laurent/${id}`)
+	  .then(response => response.text())
+	  .then(html => {
+	      post.innerHTML += `
+<article id="content${id}" class="post-content">${html}</article>
+`;
+	      location.href = `#${post.id}`;
+	      
+	  });
+      else
+	  post.removeChild(content);
+  }
+</script>
+{% endblock script %}

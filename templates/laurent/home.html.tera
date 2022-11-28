@@ -1,0 +1,30 @@
+{% extends "laurent/layout" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block style %}
+<style>
+  #home-content {
+      margin: 100px 30%;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div id="home-content">
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  let navHome = document.querySelector("#nav-home");
+  navHome.className = "activated";
+  let editLink = '<a id="nav-edit" href="/edit">Edit Home</a>';
+  navHome.insertAdjacentHTML('afterend', editLink);
+  
+  let homeContent = document.querySelector("#home-content");
+  fetch("/home/laurent?content_type=html")
+    .then(response => response.text())
+    .then(html => homeContent.innerHTML = html);
+</script>
+{% endblock script %}
