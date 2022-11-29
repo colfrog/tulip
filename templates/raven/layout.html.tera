@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <title>Raven - {% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {% block style %}
+    {% endblock style %}
+  </head>
+  <body>
+    <header>
+      <h1>Raven</h1>
+      <nav>
+	<a id="nav-home" href="/">Home</a>
+	<a id="nav-characters" href="/characters">Characters</a>
+	<a id="nav-portfolio" href="/portfolio">Portfolio</a>
+      </nav>
+    </header>
+    <main>
+      {% block content %}
+      {% endblock content%}
+    </main>
+    {% block script %}
+    {% endblock script %}
+  </body>
+</html>

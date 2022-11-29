@@ -1,0 +1,32 @@
+{% extends "raven/layout" %}
+
+{% block title %}Home{% endblock title %}
+
+{% block style %}
+<style>
+</style>
+{% endblock style %}
+
+{% block content %}
+<div id="home">
+</div>
+<div id="todo">
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  let navHome = document.querySelector("#nav-home");
+  navHome.className = "activated";
+  let editLink = '<a id="nav-edit" href="/edit">Edit Home</a>';
+  navHome.insertAdjacentHTML('afterend', editLink);
+  
+  let homeContent = document.querySelector("#home");
+  fetch("/home/raven?content_type=html")
+    .then(response => response.text())
+    .then(html => homeContent.innerHTML = html);
+</script>
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="/react/todo.js"></script>
+{% endblock script %}

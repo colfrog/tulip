@@ -1,0 +1,23 @@
+{% extends "raven/layout" %}
+
+{% block title %}Portfolio{% endblock title %}
+
+{% block style %}
+<style>
+  header {
+      background-image: none;
+      background-color: #1a262f;
+  }
+
+  main {
+      background-image: linear-gradient(#d38292, #eaf0e0);
+      color: #293c4a;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+{% endblock content %}
+
+{% block script %}
+{% endblock script %}
