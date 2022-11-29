@@ -9,26 +9,27 @@ class ToDo extends React.Component {
     this.deleteFunction = props.deleteFunction;
   }
   deleteTodo() {
-    fetch('/api/todo', {
+    fetch('/todo', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        id: this.state.id
-      })
+      body: this.state.id
+    }).then(response => {
+	if (response.ok)
+	    this.deleteFunction(this);
     });
-    this.deleteFunction(this);
   }
   setDone() {
-    fetch('/api/todo', {
+    fetch('/todo', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        id: this.state.id,
-        done: true
+          id: this.state.id,
+	  text: this.state.text,
+          done: true
       })
     }).then(response => {
       return response.json();
@@ -57,15 +58,15 @@ class ToDoList extends React.Component {
       todoList: [],
       text: ''
     };
-    fetch('/api/todo').then(response => {
+    fetch('/todo').then(response => {
       if (!response.ok) throw new Error(`Failed to fetch todo: ${response.status}`);
       return response.json();
     }).then(json => {
       let list = [];
       json.forEach(item => {
         let todo = /*#__PURE__*/React.createElement(ToDo, {
-          key: item._id,
-          id: item._id,
+          key: item.id,
+          id: item.id,
           text: item.text,
           done: item.done,
           deleteFunction: this.deleteItem.bind(this)
@@ -84,15 +85,12 @@ class ToDoList extends React.Component {
   }
   addItem() {
     let text = this.state.text;
-    fetch('/api/todo', {
+    fetch('/todo', {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain'
       },
-      body: JSON.stringify({
-        text: this.state.text,
-        done: false
-      })
+      body: this.state.text
     }).then(response => {
       if (!response.ok) throw new Error(`Failed to post todo: ${response.status}`);
       return response.json();

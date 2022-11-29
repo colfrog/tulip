@@ -18,3 +18,9 @@ CREATE TABLE IF NOT EXISTS images (
 	username VARCHAR NOT NULL,
 	image BLOB NOT NULL
 );
+CREATE TABLE IF NOT EXISTS todo (
+       id INTEGER PRIMARY KEY AUTOINCREMENT,
+       username VARCHAR NOT NULL,
+       text VARCHAR NOT NULL,
+       done BOOLEAN DEFAULT false
+);

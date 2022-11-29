@@ -24,6 +24,7 @@ pub type Result<T, E = Debug<rusqlite::Error>> = std::result::Result<T, E>;
 mod blog;
 mod home;
 mod image;
+mod todo;
 
 #[derive(Debug)]
 enum UsernameError {
@@ -112,6 +113,7 @@ fn rocket() -> _ {
 	.attach(home::stage())
 	.attach(blog::stage())
 	.attach(image::stage())
+	.attach(todo::stage())
 	.mount("/", routes![get_user, get_home, get_blog, get_edit, get_characters, get_portfolio, public])
 }
 
