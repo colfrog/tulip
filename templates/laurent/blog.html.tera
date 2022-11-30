@@ -68,7 +68,7 @@
   function postURL(title) {
       let url = title.toLowerCase();
       url = removePunctuation(url);
-      url = url.replaceAll(' ', '-');
+      url = url.replace(/ /g, '-');
       return url;
   }
 
@@ -86,8 +86,9 @@
 	      location.href = `#${post.id}`;
 	      
 	  });
-      else
+      else {
 	  post.removeChild(content);
+      }
   }
 </script>
 {% endblock script %}

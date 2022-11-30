@@ -33,7 +33,7 @@ async fn new_todo(db: Db, username: User, text: String) -> Option<Json<Todo>> {
     let db_text = text.clone();
     let db_username = username.0.clone();
     let todo = db.run(move |conn| {
-	conn.execute("INSERT INTO todo (username, text) VALUES (?1, ?2)", params![db_username, db_text]);
+	let _ = conn.execute("INSERT INTO todo (username, text) VALUES (?1, ?2)", params![db_username, db_text]);
 	conn.query_row("SELECT id, text, done FROM todo WHERE username = ?1 AND text = ?2 ORDER BY id ASC",
 	    params![db_username, db_text], |row| Ok(Todo {
 		id: row.get(0)?,
@@ -50,7 +50,7 @@ async fn update_todo(db: Db, username: User, todo: Json<Todo>) -> Option<Json<To
     let db_todo = todo.clone();
     println!("{} {} {}", todo.id, todo.text, todo.done);
     let result = db.run(move |conn| {
-	conn.execute("UPDATE todo SET text = ?1, done = ?2 WHERE username = ?3 AND id = ?4", params![db_todo.text, true, username.0, db_todo.id]);
+	let _ = conn.execute("UPDATE todo SET text = ?1, done = ?2 WHERE username = ?3 AND id = ?4", params![db_todo.text, true, username.0, db_todo.id]);
 	conn.query_row("SELECT id, text, done FROM todo WHERE username = ?1 AND id = ?2 ORDER BY id ASC",
 	    params![username.0, db_todo.id], |row| Ok(Todo {
 		id: row.get(0)?,
@@ -64,10 +64,12 @@ async fn update_todo(db: Db, username: User, todo: Json<Todo>) -> Option<Json<To
 }
 
 #[delete("/", data = "<id>")]
-async fn delete_todo(db: Db, username: User, id: String) {
+async fn delete_todo(db: Db, username: User, id: String) -> Option<&'static str> {
     db.run(move |conn| {
 	conn.execute("DELETE FROM todo WHERE username = ?1 AND id = ?2", params![username.0, id])
-    }).await;
+    }).await.ok()?;
+
+    Some("done")
 }
 
 pub fn stage() -> AdHoc {

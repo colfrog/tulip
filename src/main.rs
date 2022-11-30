@@ -42,7 +42,7 @@ impl<'r> FromRequest<'r> for User {
           Some(host) => {
               // check validity
 	      let host = host.to_string();
-	      let mut username = String::new();
+	      let username: String;
 	      if host.starts_with("localhost") {
 		  username = "laurent".to_string();
 	      } else if host.starts_with("127.0.0.1") {
@@ -71,26 +71,26 @@ async fn get_home(username: User) -> Template {
 }
 
 #[get("/blog")]
-async fn get_blog() -> Template {
-    Template::render("laurent/blog", context! {
+async fn get_blog(username: User) -> Template {
+    Template::render(username.0 + "/blog", context! {
     })
 }
 
 #[get("/edit")]
-async fn get_edit() -> Template {
-    Template::render("raven/edit", context! {
+async fn get_edit(username: User) -> Template {
+    Template::render(username.0 + "/edit", context! {
     })
 }
 
 #[get("/characters")]
-async fn get_characters() -> Template {
-    Template::render("raven/characters", context! {
+async fn get_characters(username: User) -> Template {
+    Template::render(username.0 + "/characters", context! {
     })
 }
 
 #[get("/portfolio")]
-async fn get_portfolio() -> Template {
-    Template::render("raven/portfolio", context! {
+async fn get_portfolio(username: User) -> Template {
+    Template::render(username.0 + "/portfolio", context! {
     })
 }
 
