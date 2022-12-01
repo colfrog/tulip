@@ -4,13 +4,18 @@
 
 {% block style %}
 <style>
+  #homeContent {
+      margin: 40px 27%;
+  }
 </style>
 {% endblock style %}
 
 {% block content %}
-<div id="home">
-</div>
-<div id="todo">
+<div id="homeContent">
+  <div id="home">
+  </div>
+  <div id="todo">
+  </div>
 </div>
 {% endblock content %}
 

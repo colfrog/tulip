@@ -2,12 +2,12 @@
   <head>
     <title>{% block title %}{% endblock title %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/nilio.css"/>
+    <link rel="stylesheet" href="/css/nilio.css"/>
     {% block style %}{% endblock style %}
   </head>
   <body>
     <header>
-      <img src="/i/head.jpg" />
+      <img src="/images/head.jpg" />
       <div id="headerText">
 	<h1>Laurent</h1>
 	<h4>Full-Stack Developer</h4>
@@ -15,13 +15,14 @@
       </div>
       <div id="icons">
 	<a href="https://github.com/colfrog">
-	  <img src="/i/Github Mark.png" alt="Github" />
+	  <img src="/images/Github Mark.png" alt="Github" />
 	</a>
       </div>
     </header>
     <nav>
       <a id="nav-home" href="/">Home</a>
       <a id="nav-blog" href="/blog">Blog</a>
+      <a id="nav-images" href="/images">Images</a>
     </nav>
     <main>
       {% block content %}

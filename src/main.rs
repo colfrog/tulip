@@ -59,38 +59,15 @@ impl<'r> FromRequest<'r> for User {
     }
 }
 
-#[get("/user")]
-fn get_user(username: User) -> String {
-    username.0
-}
-
 #[get("/")]
 async fn get_home(username: User) -> Template {
     Template::render(username.0 + "/home", context! {
     })
 }
 
-#[get("/blog")]
-async fn get_blog(username: User) -> Template {
-    Template::render(username.0 + "/blog", context! {
-    })
-}
-
-#[get("/edit")]
-async fn get_edit(username: User) -> Template {
-    Template::render(username.0 + "/edit", context! {
-    })
-}
-
-#[get("/characters")]
-async fn get_characters(username: User) -> Template {
-    Template::render(username.0 + "/characters", context! {
-    })
-}
-
-#[get("/portfolio")]
-async fn get_portfolio(username: User) -> Template {
-    Template::render(username.0 + "/portfolio", context! {
+#[get("/<template>")]
+async fn get_template(username: User, template: &str) -> Template {
+    Template::render(username.0 + "/" + template, context! {
     })
 }
 
@@ -114,7 +91,7 @@ fn rocket() -> _ {
 	.attach(blog::stage())
 	.attach(image::stage())
 	.attach(todo::stage())
-	.mount("/", routes![get_user, get_home, get_blog, get_edit, get_characters, get_portfolio, public])
+	.mount("/", routes![get_home, get_template, public])
 }
 
 async fn init_db(rocket: Rocket<Build>) -> Rocket<Build> {

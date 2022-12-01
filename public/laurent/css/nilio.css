@@ -1,7 +1,19 @@
 * {
     margin: 0
 }
+
+body {
+    display: grid;
+    grid-template-areas: "header"
+			 "nav"
+			 "main"
+			 "footer";
+    grid-template-rows: 100px 50px calc(100vh - 190px) 40px;
+    grid-template-columns: 1fr;
+}
+
 header {
+    grid-area: header;
     display: flex;
     color: white;
     background-color: red;
@@ -27,6 +39,7 @@ header img {
     border-radius: 0;
 }
 footer {
+    grid-area: footer;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -37,7 +50,29 @@ footer {
     height: 40px;
 }
 
-#content {
-    min-height: calc(100vh - 100px - 40px);
+nav {
+    grid-area: nav;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: purple;
+    padding: 0 37vw;
+}
+
+nav > a {
+    color: black;
+    background-color: red;
+    text-decoration: none;
+    padding: 5px 10px;
+}
+
+nav > a.activated {
+    color: white;
+}
+
+main {
+    grid-area: main;
     background-color: green;
+    overflow: scroll;
 }
