@@ -1,0 +1,32 @@
+{% extends "laurent/layout" %}
+
+{% block title %}Upload Images{% endblock title %}
+
+{% block style %}
+<style>
+  #uploadForm {
+      margin: 100px 35%;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div id="uploadForm">
+  <h3>Upload Images</h3>
+  <form action="/i/laurent" enctype="multipart/form-data" method="post">
+    <label for="imageID">Image ID: </label>
+    <input name="imageID" type="text"></input><br />
+    <label for="imageFile">File: </label>
+    <input name="imageFile" type="file" accept="image/png,image/jpg"></input><br />
+    <input type="submit"></input>
+  </form>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  let navImages = document.querySelector("#nav-images");
+  let uploadLink = '<a id="nav-upload" href="/upload" class="activated">Upload Images</a>';
+  navImages.insertAdjacentHTML('afterend', uploadLink);
+</script>
+{% endblock script %}
