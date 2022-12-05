@@ -32,7 +32,11 @@
 
 {% block script %}
 <script>
-  document.querySelector("#nav-blog").className = "activated";
+  let navBlog = document.querySelector("#nav-blog");
+  navBlog.className = "activated";
+  let newPostLink = '<a id="nav-new-post" href="/new">New Post</a>';
+  navBlog.insertAdjacentHTML('afterend', newPostLink);
+
   fetch("/blog/laurent")
     .then(response => response.json())
     .then(json => {

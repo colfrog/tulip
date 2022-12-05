@@ -1,0 +1,37 @@
+{% extends "laurent/layout" %}
+
+{% block title %}Blog{% endblock title %}
+
+{% block style %}
+<style>
+  #new-post-form {
+      margin: 100px 30%;
+  }
+  #text_input {
+      width: 100%;
+      height: 70%;
+      margin: 20px;
+  }
+
+  #title_input {
+      width: 400px;
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+<form id="new-post-form" method="post" action="/blog/new">
+  <label for="title_input">Title: </label>
+  <input type="text" id="title_input" name="title" required ></input>
+  <textarea id="text_input" name="text" required></textarea>
+  <input type="submit"></input>
+</form>
+{% endblock content %}
+
+{% block script %}
+<script>
+  let navBlog = document.querySelector("#nav-blog");
+  let newPostLink = '<a id="nav-new-post" class="activated" href="/new">New Post</a>';
+  navBlog.insertAdjacentHTML('afterend', newPostLink);
+</script>
+{% endblock script %}
