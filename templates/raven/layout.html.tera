@@ -13,6 +13,7 @@
 	<a id="nav-home" href="/">Home</a>
 	<a id="nav-characters" href="/characters">Characters</a>
 	<a id="nav-portfolio" href="/portfolio">Portfolio</a>
+	<a id="nav-images" href="/images">Images</a>
       </nav>
     </header>
     <main>

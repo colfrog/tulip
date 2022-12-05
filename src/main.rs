@@ -25,6 +25,8 @@ mod blog;
 mod home;
 mod image;
 mod todo;
+mod characters;
+mod portfolio;
 
 #[derive(Debug)]
 enum UsernameError {
@@ -91,6 +93,8 @@ fn rocket() -> _ {
 	.attach(blog::stage())
 	.attach(image::stage())
 	.attach(todo::stage())
+	.attach(characters::stage())
+	.attach(portfolio::stage())
 	.mount("/", routes![get_home, get_template, public])
 }
 

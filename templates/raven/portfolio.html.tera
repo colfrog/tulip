@@ -13,11 +13,37 @@
       background-image: linear-gradient(#d38292, #eaf0e0);
       color: #293c4a;
   }
+
+  img {
+      max-height: 500px;
+      max-width: 500px;
+  }
 </style>
 {% endblock style %}
 
 {% block content %}
+<div id="portfolio">
+</div>
 {% endblock content %}
 
 {% block script %}
+<script>
+  fetch("/portfolio/all")
+    .then(response => response.json())
+    .then(json => {
+	let portfolio = document.querySelector("#portfolio");
+	json.forEach(entry => {
+	    let categoryID = entry.category.replace(/ /g, "-");
+	    let category = document.querySelector(`#${categoryID}`);
+	    if (!category) {
+		portfolio.innerHTML += `<div id="${categoryID}"><h3>${entry.category}</h3></div>`;
+		category = document.querySelector(`#${categoryID}`);
+	    }
+	    
+	    category.innerHTML += `
+<img src="/i/raven/${entry.image_id}"></img>
+`;
+	});
+    });
+</script>
 {% endblock script %}
