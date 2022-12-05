@@ -10,17 +10,21 @@
 
   .post-content {
       display: block;
-      margin: 40px;
+      padding: 40px;
+      margin-top: 10px;
       text-align: left;
+      background-color: lightgreen;
   }
 
   .post {
+      background-color: teal;
       display: flex;
       justify-content: center;
       flex-direction: column;
       text-align: center;
 
       margin: 50px 0;
+      border-radius: 14px;
   }
 </style>
 {% endblock style %}
@@ -44,7 +48,7 @@
 	json.forEach(post => {
 	    blogContent.innerHTML += `
 <div id="${postURL(post.title)}" class="post post${post.id}">
-  <button onclick="togglePost(${post.id})">${post.title}</button>
+  <h1 onclick="togglePost(${post.id})">${post.title}</h1>
   <h5>${post.submitted}</h5>
 </div>
 `;
