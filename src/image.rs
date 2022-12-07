@@ -2,6 +2,7 @@ use rocket::fairing::AdHoc;
 use rocket::form::{Form, FromForm};
 use rocket::serde::json::Json;
 use rocket::fs::TempFile;
+use rocket::response::Redirect;
 
 use rocket_sync_db_pools::rusqlite::params;
 
@@ -72,7 +73,7 @@ async fn post_image_form(db: Db, username: String, image: Form<ImageForm<'_>>) -
 }
 
 #[delete("/<username>/<id>")]
-async fn delete_image(db: Db, username: String, id: String) -> Option<String> {
+async fn delete_image(db: Db, username: String, id: String) -> Option<Redirect> {
     let db_username = username.clone();
     let db_id = id.clone();
     db.run(move |conn| {
@@ -80,7 +81,8 @@ async fn delete_image(db: Db, username: String, id: String) -> Option<String> {
 		     params!(db_username, db_id))
     }).await.ok()?;
 
-    Some(format!("/i/{}/{}", username, id))
+    Some(Redirect::to(format!("/i/{}/{}", username, id)));
+    Some(Redirect::to("/images"))
 }
 
 pub fn stage() -> AdHoc {

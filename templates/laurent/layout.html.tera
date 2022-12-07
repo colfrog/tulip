@@ -7,7 +7,13 @@
   </head>
   <body>
     <header>
-      <img src="/images/head.jpg" />
+      {% if logged_in %}
+      <a href="/logout">
+      {% else %}
+      <a href="/login">
+      {% endif %}
+	<img src="/images/head.jpg" />
+      </a>
       <div id="headerText">
 	<h1>Laurent</h1>
 	<h4>Full-Stack Developer</h4>
@@ -22,7 +28,9 @@
     <nav>
       <a id="nav-home" href="/">Home</a>
       <a id="nav-blog" href="/blog">Blog</a>
+      {% if logged_in %}
       <a id="nav-images" href="/images">Images</a>
+      {% endif %}
     </nav>
     <main>
       {% block content %}

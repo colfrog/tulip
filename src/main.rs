@@ -3,8 +3,9 @@
 use rocket::{Rocket, Build};
 use rocket::fairing::AdHoc;
 use rocket::fs::NamedFile;
-use rocket::http::Status;
-use rocket::response::Debug;
+use rocket::form::{Form, FromForm};
+use rocket::http::{Status, Cookie, CookieJar};
+use rocket::response::{Debug, Redirect};
 use rocket::Request;
 use rocket::request;
 use rocket::request::Outcome;
@@ -33,13 +34,17 @@ enum UsernameError {
     Undefined
 }
 
-struct User(String);
+struct User(String, bool);
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for User {
     type Error = UsernameError;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let host = request.headers().get_one("Host");
+	let authenticated = request.cookies()
+	    .get_private("authenticated")
+	    .and_then(|cookie| Some(cookie.value() == "1"))
+	    .unwrap_or(false);
         match host {
           Some(host) => {
               // check validity
@@ -53,7 +58,7 @@ impl<'r> FromRequest<'r> for User {
 		  username = "undefined".to_string();
 	      }
 	      
-              Outcome::Success(User(username))
+              Outcome::Success(User(username, authenticated))
           },
           // token does not exist
           None => Outcome::Failure((Status::Unauthorized, UsernameError::Undefined))
@@ -61,21 +66,50 @@ impl<'r> FromRequest<'r> for User {
     }
 }
 
+#[derive(FromForm)]
+struct LoginForm<'r> {
+    username: &'r str,
+    password: &'r str
+}
+
+#[post("/login", data = "<login>")]
+async fn login(db: Db, user: User, jar: &CookieJar<'_>, login: Form<LoginForm<'_>>) -> Option<Redirect> {
+    let username = login.username.to_string();
+    let password: String = db.run(move |conn| {
+	conn.query_row("SELECT password FROM users WHERE username = ?1",
+		       params![username], |row| Ok(row.get(0)?))
+    }).await.ok()?;
+
+    if password == login.password {
+	jar.add_private(Cookie::new("authenticated", "1"));
+    }
+    
+    Some(Redirect::to("/"))
+}
+
+#[get("/logout")]
+fn logout(jar: &CookieJar<'_>) -> Redirect {
+    jar.remove_private(Cookie::named("authenticated"));
+    Redirect::to("/")
+}
+
 #[get("/")]
-async fn get_home(username: User) -> Template {
-    Template::render(username.0 + "/home", context! {
+async fn get_home(user: User) -> Template {
+    Template::render(user.0 + "/home", context! {
+	logged_in: user.1
     })
 }
 
 #[get("/<template>")]
-async fn get_template(username: User, template: &str) -> Template {
-    Template::render(username.0 + "/" + template, context! {
+async fn get_template(user: User, template: &str) -> Template {
+    Template::render(user.0 + "/" + template, context! {
+	logged_in: user.1
     })
 }
 
 #[get("/<path..>", rank = 1)]
-async fn public(username: User, path: PathBuf) -> Option<NamedFile> {
-    let mut path = Path::new(&("public/".to_owned() + &username.0)).join(path);
+async fn public(user: User, path: PathBuf) -> Option<NamedFile> {
+    let mut path = Path::new(&("public/".to_owned() + &user.0)).join(path);
     if path.is_dir() {
         path.push("index.html");
     }
@@ -95,7 +129,7 @@ fn rocket() -> _ {
 	.attach(todo::stage())
 	.attach(characters::stage())
 	.attach(portfolio::stage())
-	.mount("/", routes![get_home, get_template, public])
+	.mount("/", routes![login, logout, get_home, get_template, public])
 }
 
 async fn init_db(rocket: Rocket<Build>) -> Rocket<Build> {

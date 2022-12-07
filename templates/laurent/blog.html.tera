@@ -38,9 +38,11 @@
 <script>
   let navBlog = document.querySelector("#nav-blog");
   navBlog.className = "activated";
+  {% if logged_in %}
   let newPostLink = '<a id="nav-new-post" href="/new">New Post</a>';
   navBlog.insertAdjacentHTML('afterend', newPostLink);
-
+  {% endif %}
+  
   fetch("/blog/laurent")
     .then(response => response.json())
     .then(json => {

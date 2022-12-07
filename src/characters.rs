@@ -68,7 +68,7 @@ async fn new_character_form(db: Db, username: User, character: Form<Character>) 
 }
 
 pub fn stage() -> AdHoc {
-    AdHoc::on_ignite("Blog Stage", |rocket| async {
+    AdHoc::on_ignite("Portfolio Stage", |rocket| async {
         rocket.mount("/characters", routes![characters, character, new_character_form])
     })
 }

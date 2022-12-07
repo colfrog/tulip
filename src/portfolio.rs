@@ -15,7 +15,7 @@ struct Entry {
 #[get("/all")]
 async fn portfolio(db: Db, username: User) -> Result<Json<Vec<Entry>>> {
     let characters = db.run(move |conn| {
-	conn.prepare("SELECT category, image FROM portfolio WHERE username = ?1 ORDER BY category DESC")?
+	conn.prepare("SELECT category, image FROM portfolio WHERE username = ?1 ORDER BY category")?
 	    .query_map(params![username.0], |row| {
 		Ok(Entry {
 		    category: row.get(0)?,
@@ -29,7 +29,7 @@ async fn portfolio(db: Db, username: User) -> Result<Json<Vec<Entry>>> {
 }
 
 pub fn stage() -> AdHoc {
-    AdHoc::on_ignite("Blog Stage", |rocket| async {
+    AdHoc::on_ignite("Portfolio Stage", |rocket| async {
         rocket.mount("/portfolio", routes![portfolio])
     })
 }
