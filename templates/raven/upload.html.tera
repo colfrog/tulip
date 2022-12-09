@@ -13,13 +13,11 @@
 {% block content %}
 <div id="uploadForm">
   <h3>Upload Images</h3>
-  <form action="/i/raven" enctype="multipart/form-data" method="post">
-    <label for="imageID">Image ID: </label>
-    <input name="imageID" type="text"></input><br />
-    <label for="imageFile">File: </label>
-    <input name="imageFile" type="file" accept="image/png,image/jpg"></input><br />
-    <input type="submit"></input>
-  </form>
+  <label for="imageID">Image ID: </label>
+  <input id="imageID" type="text" /><br />
+  <label for="imageFile">File: </label>
+  <input id="imageFile" type="file" accept="image/png,image/jpg" /><br />
+  <button onclick="uploadFile()">upload</button>
 </div>
 {% endblock content %}
 
@@ -28,5 +26,26 @@
   let navImages = document.querySelector("#nav-images");
   let uploadLink = '<a id="nav-upload" href="/upload" class="activated">Upload Images</a>';
   navImages.insertAdjacentHTML('afterend', uploadLink);
+
+  function uploadFile() {
+    let id = document.querySelector("#imageID").value;
+    let file = document.querySelector("#imageFile").files[0];
+    console.log(id);
+    if (id && file) {
+      fetch(`/i/raven/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "image/png"
+        },
+        body: file
+      })
+      .then(response => {
+        if (response.ok())
+          alert(`Uploaded file ${response.text()}`);
+        else
+          alert("File upload failed");
+      });
+    }
+  }
 </script>
 {% endblock script %}

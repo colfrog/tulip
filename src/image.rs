@@ -81,7 +81,6 @@ async fn delete_image(db: Db, username: String, id: String) -> Option<Redirect> 
 		     params!(db_username, db_id))
     }).await.ok()?;
 
-    Some(Redirect::to(format!("/i/{}/{}", username, id)));
     Some(Redirect::to("/images"))
 }
 
