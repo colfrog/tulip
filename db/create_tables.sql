@@ -3,10 +3,11 @@ CREATE TABLE IF NOT EXISTS posts (
        username VARCHAR NOT NULL,
        title VARCHAR NOT NULL,
        markdown VARCHAR NOT NULL,
-       submitted DATETIME DEFAULT CURRENT_TIMESTAMP
+       submitted DATETIME DEFAULT CURRENT_TIMESTAMP,
+       UNIQUE(id, username)
 );
 CREATE TABLE IF NOT EXISTS home (
-       username VARCHAR PRIMARY KEY,
+       username VARCHAR PRIMARY KEY UNIQUE,
        markdown VARCHAR
 );
 CREATE TABLE IF NOT EXISTS users (
@@ -14,9 +15,10 @@ CREATE TABLE IF NOT EXISTS users (
        password VARCHAR NOT NULL
 );
 CREATE TABLE IF NOT EXISTS images (
-	id VARCHAR PRIMARY KEY UNIQUE,
+	id VARCHAR PRIMARY KEY,
 	username VARCHAR NOT NULL,
-	image BLOB NOT NULL
+	image BLOB NOT NULL,
+       UNIQUE(id, username)
 );
 CREATE TABLE IF NOT EXISTS todo (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +30,8 @@ CREATE TABLE IF NOT EXISTS characters (
        charname VARCHAR PRIMARY KEY NOT NULL,
        username VARCHAR NOT NULL,
        image VARCHAR NOT NULL,
-       description VARCHAR NOT NULL
+       description VARCHAR NOT NULL,
+       UNIQUE(charname, username)
 );
 CREATE TABLE IF NOT EXISTS character_images (
        username VARCHAR NOT NULL,

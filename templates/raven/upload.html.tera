@@ -16,7 +16,7 @@
   <label for="imageID">Image ID: </label>
   <input id="imageID" type="text" /><br />
   <label for="imageFile">File: </label>
-  <input id="imageFile" type="file" accept="image/png,image/jpg" /><br />
+  <input id="imageFile" type="file" accept="image/png,image/jpeg" /><br />
   <button onclick="uploadFile()">upload</button>
 </div>
 {% endblock content %}
@@ -40,7 +40,7 @@
         body: file
       })
       .then(response => {
-        if (response.ok())
+        if (response.ok)
           alert(`Uploaded file ${response.text()}`);
         else
           alert("File upload failed");
