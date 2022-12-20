@@ -10,6 +10,10 @@
       min-height: 50%;
       background-color: grey;
   }
+
+  #home-content p {
+    margin: 10px;
+  }
 </style>
 {% endblock style %}
 
