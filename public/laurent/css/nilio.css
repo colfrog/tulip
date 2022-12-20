@@ -73,6 +73,6 @@ nav > a.activated {
 
 main {
     grid-area: main;
-    background-color: green;
+    background-color: #123453;
     overflow: scroll;
 }

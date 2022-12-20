@@ -5,7 +5,10 @@
 {% block style %}
 <style>
   #home-content {
-      margin: 100px 30%;
+      margin: 0 20%;
+      padding: 100px 5%;
+      min-height: calc(100vh - 405px);
+      background-color: grey;
   }
 </style>
 {% endblock style %}
