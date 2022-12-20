@@ -42,7 +42,7 @@
 	let imageList = document.querySelector("#image-list");
 	json.forEach(imageId => {
 	    imageList.innerHTML += `
-<div id="${imageId}" class="image">
+<div id="${URLSafe(imageId)}" class="image">
   <img src="/i/raven/${imageId}"></img>
   <h5>${imageId}</h5>
 </div>

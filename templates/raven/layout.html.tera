@@ -20,6 +20,7 @@
       {% block content %}
       {% endblock content%}
     </main>
+    <script src="/js/raven.js"></script>
     {% block script %}
     {% endblock script %}
   </body>
