@@ -5,9 +5,9 @@
 {% block style %}
 <style>
   #home-content {
-      margin: 0 20%;
+      margin: 10% 20%;
       padding: 100px 5%;
-      min-height: calc(100vh - 405px);
+      min-height: 50%;
       background-color: grey;
   }
 </style>
