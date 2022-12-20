@@ -22,9 +22,9 @@
 {% block content %}
 <form id="new-post-form" method="post" action="/blog/new">
   <label for="title-input">Title: </label>
-  <input type="text" id="title-input" name="title" required ></input>
+  <input type="text" id="title-input" name="title" required />
   <textarea id="text-input" name="text" required></textarea>
-  <input type="submit"></input>
+  <input type="submit" />
 </form>
 {% endblock content %}
 

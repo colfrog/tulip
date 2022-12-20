@@ -30,12 +30,12 @@
   let homeEdit = document.querySelector("#homeEdit");
   let editLink = '<a id="nav-edit" href="/edit" class="activated">Edit Home</a>';
   document.querySelector("#nav-home").insertAdjacentHTML('afterend', editLink);
-  fetch("http://localhost:8000/home/laurent?content_type=markdown")
+  fetch("/home/laurent?content_type=markdown")
     .then(response => response.text())
     .then(text => homeEdit.value = text);
 
   function editHome() {
-      fetch("http://localhost:8000/home/laurent", {
+      fetch("/home/laurent", {
 	  method: "PUT",
 	  headers: {
 	      "Content-Type": "text/plain"

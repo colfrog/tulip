@@ -15,10 +15,10 @@
 {% block content %}
 <form id="login-form" method="post" action="/login">
   <label for="username-input">Username: </label>
-  <input id="username-input" name="username" type="text"></input><br />
+  <input id="username-input" name="username" type="text" /><br />
   <label for="password-input">Password: </label>
-  <input id="password-input" name="password" type="password"></input>
-  <input type="submit"></input>
+  <input id="password-input" name="password" type="password" />
+  <input type="submit" />
 </form>
 {% endblock content %}
 
