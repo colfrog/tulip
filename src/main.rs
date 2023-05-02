@@ -73,7 +73,7 @@ struct LoginForm<'r> {
 }
 
 #[post("/login", data = "<login>")]
-async fn login(db: Db, user: User, jar: &CookieJar<'_>, login: Form<LoginForm<'_>>) -> Option<Redirect> {
+async fn login(db: Db, _user: User, jar: &CookieJar<'_>, login: Form<LoginForm<'_>>) -> Option<Redirect> {
     let username = login.username.to_string();
     let password: String = db.run(move |conn| {
 	conn.query_row("SELECT password FROM users WHERE username = ?1",
@@ -94,22 +94,22 @@ fn logout(jar: &CookieJar<'_>) -> Redirect {
 }
 
 #[get("/")]
-async fn get_home(user: User) -> Template {
-    Template::render(user.0 + "/home", context! {
-	logged_in: user.1
+async fn get_home(_user: User) -> Template {
+    Template::render(_user.0 + "/home", context! {
+	logged_in: _user.1
     })
 }
 
 #[get("/<template>")]
-async fn get_template(user: User, template: &str) -> Template {
-    Template::render(user.0 + "/" + template, context! {
-	logged_in: user.1
+async fn get_template(_user: User, template: &str) -> Template {
+    Template::render(_user.0 + "/" + template, context! {
+	logged_in: _user.1
     })
 }
 
 #[get("/<path..>", rank = 1)]
-async fn public(user: User, path: PathBuf) -> Option<NamedFile> {
-    let mut path = Path::new(&("public/".to_owned() + &user.0)).join(path);
+async fn public(_user: User, path: PathBuf) -> Option<NamedFile> {
+    let mut path = Path::new(&("public/".to_owned() + &_user.0)).join(path);
     if path.is_dir() {
         path.push("index.html");
     }

@@ -30,12 +30,11 @@ CREATE TABLE IF NOT EXISTS characters (
        charname VARCHAR PRIMARY KEY NOT NULL,
        username VARCHAR NOT NULL,
        image VARCHAR NOT NULL,
-       description VARCHAR NOT NULL,
-       UNIQUE(charname, username)
+       description VARCHAR NOT NULL
 );
 CREATE TABLE IF NOT EXISTS character_images (
        username VARCHAR NOT NULL,
-       charname VARCHAR PRIMARY KEY NOT NULL,
+       charname VARCHAR NOT NULL,
        image VARCHAR NOT NULL
 );
 CREATE TABLE IF NOT EXISTS portfolio (

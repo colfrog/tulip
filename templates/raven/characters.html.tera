@@ -12,7 +12,6 @@
   #character-list {
       display: flex;
       flex-direction: row;
-      flex-wrap: wrap;
       justify-content: space-around;
   }
 
@@ -20,16 +19,35 @@
       display: flex;
       flex-direction: column;
       width: 500px;
+      height: 600px;
+      margin: 35px;
+  }
+
+  .character-view > h3 {
+      margin: 0;
+  }
+  
+  .character-view > img {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
   }
 
   .character-image {
       width: 400px;
       height: 400px;
   }
-  .character-view > img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+
+  .character-image-list {
+      display: flex;
+      flex-wrap: wrap;
+  }
+
+  .character-image-list-image {
+      width: 250px;
+      height: 250px;
+      margin: 25px;
   }
 </style>
 {% endblock style %}
@@ -37,21 +55,24 @@
 {% block content %}
 <div id="character-list">
 </div>
+<div id="character-image-list">
+</div>
 {% endblock content %}
 
 {% block script %}
 <script>
+  var activeCharacter = "";
   let navCharacters = document.querySelector("#nav-characters");
   navCharacters.className = "activated";
   let newCharLink = '<a id="nav-new-character" href="/new-character">New Character</a>';
   navCharacters.insertAdjacentHTML('afterend', newCharLink);
 
   fetch("/characters/all")
-    .then(response => response.json())
-    .then(json => {
-	let charList = document.querySelector("#character-list");
-	json.forEach(character => {
-	    charList.innerHTML += `
+	.then(response => response.json())
+	.then(json => {
+		let charList = document.querySelector("#character-list");
+		json.forEach(character => {
+			charList.innerHTML += `
 <div id="${character.name}" class="character-view">
   <h3>${character.name}</h3>
   <img src="/i/raven/${character.image}" class="character-image"></img>
@@ -60,7 +81,30 @@
   </div>
 </div>
 `;
+			let char = document.querySelector(`#${character.name}`);
+			char.addEventListener('click', (e) => {
+				let imageList = document.querySelector("#character-image-list");
+
+				if (activeCharacter === character.name) {
+					imageList.innerHTML = "";
+					activeCharacter = "";
+				} else {
+					fetch(`/characters/images/${character.name}`)
+					.then(response => response.json())
+					.then(json => {
+						json.forEach(image => {
+							imageList.innerHTML +=
+								`
+<img src="/i/raven/${image}"
+    class="character-image-list-image"></img>
+`;
+						});
+					});
+
+					activeCharacter = character.name;
+				}
+			}, false);
+		});
 	});
-    });
 </script>
 {% endblock script %}

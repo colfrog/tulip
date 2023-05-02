@@ -18,10 +18,19 @@ struct Character {
     image: String,
 }
 
+#[derive(FromForm, Clone, Serialize, Deserialize)]
+#[serde(crate = "rocket::serde")]
+struct CharacterImage {
+    #[field(name = "name")]
+    name: String,
+    #[field(name = "image-id")]
+    image: String,
+}
+
 #[get("/all")]
 async fn characters(db: Db, username: User) -> Result<Json<Vec<Character>>> {
     let characters = db.run(move |conn| {
-	conn.prepare("SELECT charname, description, image FROM characters WHERE username = ?1 ORDER BY charname DESC")?
+	conn.prepare("SELECT charname, description, image FROM characters WHERE username = ?1 ORDER BY charname ASC")?
 	    .query_map(params![username.0], |row| {
 		let description_md: String = row.get(1)?;
 		let description = markdown(&(description_md + "\n"));
@@ -51,11 +60,38 @@ async fn character(db: Db, username: User, name: String) -> Option<Json<Characte
     Some(Json(character))
 }
 
+#[get("/images/<name>")]
+async fn character_images(db: Db, username: User, name: String) -> Result<Json<Vec<String>>> {
+    let images = db.run(move |conn| {
+	conn.prepare("SELECT image FROM character_images WHERE username = ?1 AND charname = ?2 ORDER BY charname ASC")?
+	    .query_map(params![username.0, name], |row| {
+		Ok(row.get(0)?)
+	    })?
+	    .collect::<Result<Vec<String>, _>>()
+    }).await?;
+
+    Ok(Json(images))
+}
+
+#[post("/images/new", data = "<image>")]
+async fn add_image_to_character(db: Db, username: User, image: Form<CharacterImage>) -> Option<Json<CharacterImage>> {
+    let result = db.run(move |conn| {
+	let _ = conn.execute("INSERT INTO character_images (username, charname, image) VALUES (?1, ?2, ?3)", params![username.0, image.name, image.image]);
+	conn.query_row("SELECT charname, image FROM character_images WHERE username = ?1 AND charname = ?2 AND image = ?3",
+		       params![username.0, image.name, image.image], |row| Ok(CharacterImage {
+			   name: row.get(0)?,
+			   image: row.get(1)?
+		       }))
+    }).await.ok()?;
+
+    Some(Json(result))
+}
+
+// TODO: Make this redirect to characters
 #[post("/new", data = "<character>")]
 async fn new_character_form(db: Db, username: User, character: Form<Character>) -> Option<Json<Character>> {
-    println!("{}", character.name);
     let result = db.run(move |conn| {
-	let _ = conn.execute("INSERT INTO characters (username, charname, description, image) VALUES (?1, ?2, ?3, ?4);", params![username.0, character.name, character.description, character.image]);
+	let _ = conn.execute("INSERT INTO characters (username, charname, description, image) VALUES (?1, ?2, ?3, ?4)", params![username.0, character.name, character.description, character.image]);
 	conn.query_row("SELECT charname, description, image FROM characters WHERE username = ?1 AND charname = ?2 AND description = ?3",
 		       params![username.0, character.name, character.description], |row| Ok(Character {
 			   name: row.get(0)?,
@@ -68,7 +104,7 @@ async fn new_character_form(db: Db, username: User, character: Form<Character>) 
 }
 
 pub fn stage() -> AdHoc {
-    AdHoc::on_ignite("Portfolio Stage", |rocket| async {
-        rocket.mount("/characters", routes![characters, character, new_character_form])
+    AdHoc::on_ignite("Characters Stage", |rocket| async {
+        rocket.mount("/characters", routes![characters, character, character_images, add_image_to_character, new_character_form])
     })
 }

@@ -22,6 +22,10 @@
       text-align: center;
       color: white;
   }
+
+  .image-form {
+      text-align: left;
+  }
 </style>
 {% endblock style %}
 
@@ -45,6 +49,22 @@
 <div id="${URLSafe(imageId)}" class="image">
   <img src="/i/raven/${imageId}"></img>
   <h5>${imageId}</h5>
+</div>
+
+<div class="image-forms">
+  <form id="portfolio-form-${URLSafe(imageId)}" method="post" action="/portfolio/new">
+    <input type="text" id="portfolio-image-id-${URLSafe(imageId)}" name="image-id" value="${imageId}" hidden></input>
+    <label for="category-input-${URLSafe(imageId)}">Category: </label>
+    <input type="text" id="category-input-${URLSafe(imageId)}" name="category" required></input>
+    <input type="submit" value="Add to portfolio"></input>
+  </form>
+
+    <form id="character-form-${URLSafe(imageId)}" method="post" action="/characters/images/new">
+    <input type="text" id="character-image-id-${URLSafe(imageId)}" name="image-id" value="${imageId}" hidden></input>
+    <label for="character-input-${URLSafe(imageId)}">Character name: </label>
+    <input type="text" id="character-input-${URLSafe(imageId)}" name="name" required></input>
+    <input type="submit" value="Add to character"></input>
+  </form>
 </div>
 `;
 	})
