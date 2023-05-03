@@ -18,11 +18,18 @@
   }
 
   #image-list .image {
+      width: 500px;
+      height: 700px;
       margin: 24px;
       text-align: center;
       color: white;
   }
 
+  .image-view {
+      display: flex;
+      flex-direction: column;
+  }
+  
   .image-form {
       text-align: left;
   }
@@ -45,7 +52,8 @@
     .then(json => {
 	let imageList = document.querySelector("#image-list");
 	json.forEach(imageId => {
-	    imageList.innerHTML += `
+		imageList.innerHTML += `
+<div class="image-view">
 <div id="${URLSafe(imageId)}" class="image">
   <img src="/i/raven/${imageId}"></img>
   <h5>${imageId}</h5>
@@ -65,6 +73,7 @@
     <input type="text" id="character-input-${URLSafe(imageId)}" name="name" required></input>
     <input type="submit" value="Add to character"></input>
   </form>
+</div>
 </div>
 `;
 	})

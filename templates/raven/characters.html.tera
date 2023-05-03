@@ -9,6 +9,25 @@
       background-color: pink;
   }
 
+  #image-overlay {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+      visibility: hidden;
+      height: 100%;
+      width: 100vw;
+      margin: 0;
+      position: absolute;
+      top: 300px;
+      left: 0;
+  }
+
+  #image-overlay > img {
+      max-width: 95%;
+      max-height: 95%;
+  }
+
   #character-list {
       display: flex;
       flex-direction: row;
@@ -53,9 +72,13 @@
 {% endblock style %}
 
 {% block content %}
-<div id="character-list">
-</div>
-<div id="character-image-list">
+<div id="characters">
+  <div id="image-overlay">
+  </div>
+  <div id="character-list">
+  </div>
+  <div id="character-image-list">
+  </div>
 </div>
 {% endblock content %}
 
@@ -66,6 +89,12 @@
   navCharacters.className = "activated";
   let newCharLink = '<a id="nav-new-character" href="/new-character">New Character</a>';
   navCharacters.insertAdjacentHTML('afterend', newCharLink);
+  let imageOverlay = document.querySelector("#image-overlay");
+
+  imageOverlay.addEventListener('click', e => {
+	  imageOverlay.style.visibility = 'hidden';
+	  imageOverlay.innerHTML = '';
+  }, true);
 
   fetch("/characters/all")
 	.then(response => response.json())
@@ -95,9 +124,16 @@
 						json.forEach(image => {
 							imageList.innerHTML +=
 								`
-<img src="/i/raven/${image}"
+<img id="${character.name}-${URLSafe(image)}" src="/i/raven/${image}"
     class="character-image-list-image"></img>
 `;
+							let imageEl = document.querySelector(`#${character.name}-${URLSafe(image)}`);
+							imageEl.addEventListener('click', e => {
+								imageOverlay.style.visibility = "visible";
+								imageOverlay.innerHTML += `
+<img src="/i/raven/${image}"></img>
+`;
+							}, false);
 						});
 					});
 

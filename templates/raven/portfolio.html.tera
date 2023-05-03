@@ -14,36 +14,72 @@
       color: #293c4a;
   }
 
-  img {
+  .portfolio-image {
       max-height: 500px;
       max-width: 500px;
+  }
+  
+  #image-overlay {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.4);
+      visibility: hidden;
+      height: 100%;
+      width: 100vw;
+      margin: 0;
+      position: absolute;
+      top: 300px;
+      left: 0;
+  }
+
+  #image-overlay > img {
+      max-width: 95%;
+      max-height: 95%;
   }
 </style>
 {% endblock style %}
 
 {% block content %}
+<div id="image-overlay">
+</div>
 <div id="portfolio">
 </div>
 {% endblock content %}
 
 {% block script %}
 <script>
+  let imageOverlay = document.querySelector("#image-overlay");
+  imageOverlay.addEventListener('click', e => {
+	  imageOverlay.style.visibility = 'hidden';
+	  imageOverlay.innerHTML = '';
+  }, true);
+  
   fetch("/portfolio/all")
-    .then(response => response.json())
-    .then(json => {
-	let portfolio = document.querySelector("#portfolio");
-	json.forEach(entry => {
-	    let categoryID = entry.category.replace(/ /g, "-");
-	    let category = document.querySelector(`#${categoryID}`);
-	    if (!category) {
-		portfolio.innerHTML += `<div id="${categoryID}"><h3>${entry.category}</h3></div>`;
-		category = document.querySelector(`#${categoryID}`);
-	    }
-	    
-	    category.innerHTML += `
+	.then(response => response.json())
+	.then(json => {
+		let portfolio = document.querySelector("#portfolio");
+		json.forEach(entry => {
+			let categoryID = entry.category.replace(/ /g, "-");
+			let category = document.querySelector(`#${categoryID}`);
+			if (!category) {
+				portfolio.innerHTML += `<div id="${categoryID}"><h3>${entry.category}</h3></div>`;
+				category = document.querySelector(`#${categoryID}`);
+			}
+			
+			category.innerHTML += `
+<img id="${categoryID}-${URLSafe(entry.image_id)}" src="/i/raven/${entry.image_id}" class="portfolio-image"></img>
+`;
+			let imageEl = document.querySelector(`#${categoryID}-${URLSafe(entry.image_id)}`);
+			imageEl.addEventListener('click', e => {
+				let imageOverlay = document.querySelector("#image-overlay");
+				imageOverlay.style.visibility = "visible";
+				imageOverlay.innerHTML += `
 <img src="/i/raven/${entry.image_id}"></img>
 `;
+				
+			}, false);
+		});
 	});
-    });
 </script>
 {% endblock script %}
