@@ -87,14 +87,20 @@
   var activeCharacter = "";
   let navCharacters = document.querySelector("#nav-characters");
   navCharacters.className = "activated";
+  {% if logged_in %}
   let newCharLink = '<a id="nav-new-character" href="/new-character">New Character</a>';
   navCharacters.insertAdjacentHTML('afterend', newCharLink);
+  {% endif %}
+  
   let imageOverlay = document.querySelector("#image-overlay");
 
   imageOverlay.addEventListener('click', e => {
 	  imageOverlay.style.visibility = 'hidden';
 	  imageOverlay.innerHTML = '';
   }, true);
+  document.addEventListener('scroll', e => {
+	  imageOverlay.style.top = document.scrollingElement.scrollTop;
+  }, false);
 
   fetch("/characters/all")
 	.then(response => response.json())

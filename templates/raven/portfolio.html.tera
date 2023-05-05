@@ -12,6 +12,7 @@
   main {
       background-image: linear-gradient(#d38292, #eaf0e0);
       color: #293c4a;
+      min-height: 100vh;
   }
 
   .portfolio-image {
@@ -54,6 +55,9 @@
 	  imageOverlay.style.visibility = 'hidden';
 	  imageOverlay.innerHTML = '';
   }, true);
+  document.addEventListener('scroll', e => {
+	  imageOverlay.style.top = document.scrollingElement.scrollTop;
+  }, false);
   
   fetch("/portfolio/all")
 	.then(response => response.json())

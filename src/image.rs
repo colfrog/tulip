@@ -9,7 +9,7 @@ use rocket_sync_db_pools::rusqlite::params;
 use std::io::prelude::*;
 use std::fs::File;
 
-use super::{Db, Result};
+use super::{Db, Result, User};
 
 #[derive(Responder)]
 #[response(content_type = "image/png")]
@@ -38,7 +38,11 @@ async fn get_image(db: Db, username: String, id: String) -> Option<Image> {
 }
 
 #[post("/<username>/<id>", data = "<image>")]
-async fn post_image(db: Db, username: String, id: String, image: Vec<u8>) -> Option<String> {
+async fn post_image(db: Db, _user: User, username: String, id: String, image: Vec<u8>) -> Option<String> {
+    if !_user.1 {
+	return None
+    }
+    
     let db_username = username.clone();
     let db_id = id.clone();
     db.run(move |conn| {
@@ -58,7 +62,11 @@ struct ImageForm<'r> {
 }
 
 #[post("/<username>", data = "<image>")]
-async fn post_image_form(db: Db, username: String, image: Form<ImageForm<'_>>) -> Option<String> {
+async fn post_image_form(db: Db, _user: User, username: String, image: Form<ImageForm<'_>>) -> Option<String> {
+    if !_user.1 {
+	return None
+    }
+    
     let db_username = username.clone();
     let id = image.id.to_string();
     let mut file = File::open(image.file.path().unwrap()).ok()?;
@@ -73,7 +81,11 @@ async fn post_image_form(db: Db, username: String, image: Form<ImageForm<'_>>) -
 }
 
 #[delete("/<username>/<id>")]
-async fn delete_image(db: Db, username: String, id: String) -> Option<Redirect> {
+async fn delete_image(db: Db, _user: User, username: String, id: String) -> Option<Redirect> {
+    if !_user.1 {
+	return None
+    }
+    
     let db_username = username.clone();
     let db_id = id.clone();
     db.run(move |conn| {

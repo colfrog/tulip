@@ -30,6 +30,10 @@ async fn get_todo(db: Db, username: User) -> Result<Json<Vec<Todo>>> {
 
 #[post("/", data = "<text>")]
 async fn new_todo(db: Db, username: User, text: String) -> Option<Json<Todo>> {
+    if !username.1 {
+	return None
+    }
+    
     let db_text = text.clone();
     let db_username = username.0.clone();
     let todo = db.run(move |conn| {
@@ -47,6 +51,10 @@ async fn new_todo(db: Db, username: User, text: String) -> Option<Json<Todo>> {
 
 #[put("/", data = "<todo>")]
 async fn update_todo(db: Db, username: User, todo: Json<Todo>) -> Option<Json<Todo>> {
+    if !username.1 {
+	return None
+    }
+    
     let db_todo = todo.clone();
     println!("{} {} {}", todo.id, todo.text, todo.done);
     let result = db.run(move |conn| {
@@ -65,6 +73,10 @@ async fn update_todo(db: Db, username: User, todo: Json<Todo>) -> Option<Json<To
 
 #[delete("/", data = "<id>")]
 async fn delete_todo(db: Db, username: User, id: String) -> Option<&'static str> {
+    if !username.1 {
+	return None
+    }
+    
     db.run(move |conn| {
 	conn.execute("DELETE FROM todo WHERE username = ?1 AND id = ?2", params![username.0, id])
     }).await.ok()?;

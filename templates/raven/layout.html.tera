@@ -13,7 +13,12 @@
 	<a id="nav-home" href="/">Home</a>
 	<a id="nav-characters" href="/characters">Characters</a>
 	<a id="nav-portfolio" href="/portfolio">Portfolio</a>
+	{% if logged_in %}
 	<a id="nav-images" href="/images">Images</a>
+	<a id="nav-logout" href="/logout">Log out</a>
+	{% else %}
+	<a id="nav-login" href="/login">Log in</a>
+	{% endif %}
       </nav>
     </header>
     <main>

@@ -34,6 +34,10 @@ async fn portfolio(db: Db, username: User) -> Result<Json<Vec<Entry>>> {
 // TODO: Make this redirect to the portfolio
 #[post("/new", data = "<entry>")]
 async fn add_to_portfolio(db: Db, username: User, entry: Form<Entry>) -> Option<Json<Entry>> {
+    if !username.1 {
+	return None;
+    }
+    
     let result = db.run(move |conn| {
 	let _ = conn.execute("INSERT INTO portfolio (username, category, image) VALUES (?1, ?2, ?3)",
  			     params![username.0, entry.category, entry.image_id]);

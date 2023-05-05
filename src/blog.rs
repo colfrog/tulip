@@ -51,7 +51,11 @@ async fn blog_post(db: Db, username: String, id: u64) -> Option<RawHtml<String>>
 }
 
 #[post("/<username>", data = "<post>")]
-async fn new_blog_post(db: Db, username: String, post: Json<Post>) -> Option<Json<Post>> {
+async fn new_blog_post(db: Db, _user: User, username: String, post: Json<Post>) -> Option<Json<Post>> {
+    if !_user.1 {
+	return None
+    }
+    
     let db_post = post.clone();
     db.run(move |conn| {
 	conn.execute("INSERT INTO posts (username, title, markdown) VALUES (?1, ?2, ?3);", params![username, db_post.title, db_post.markdown])
@@ -62,6 +66,10 @@ async fn new_blog_post(db: Db, username: String, post: Json<Post>) -> Option<Jso
 
 #[post("/new", data = "<post>")]
 async fn new_blog_post_form(db: Db, username: User, post: Form<Post>) -> Option<Json<Post>> {
+    if !username.1 {
+	return None
+    }
+    
     let db_title = post.title.clone();
     let db_markdown = post.markdown.clone();
     let result = db.run(move |conn| {

@@ -4,7 +4,7 @@ use rocket::fairing::AdHoc;
 use rocket_sync_db_pools::rusqlite::params;
 use markdown_to_html::markdown;
 
-use super::Db;
+use super::{Db, User};
 
 #[get("/<username>?<content_type>")]
 async fn home(db: Db, username: &str, content_type: &str) -> Option<RawHtml<String>> {
@@ -25,7 +25,11 @@ async fn home(db: Db, username: &str, content_type: &str) -> Option<RawHtml<Stri
 }
 
 #[put("/<username>", data = "<content>")]
-async fn update_home(db: Db, username: &str, content: &str) -> Option<RawHtml<String>> {
+async fn update_home(db: Db, _user: User, username: &str, content: &str) -> Option<RawHtml<String>> {
+    if !_user.1 {
+	return None
+    }
+    
     let username: String = username.to_string();
     let db_content: String = content.to_string();
     let affected = db.run(move |conn| {
