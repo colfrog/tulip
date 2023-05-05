@@ -23,8 +23,10 @@
 <script>
   let navHome = document.querySelector("#nav-home");
   navHome.className = "activated";
+  {% if logged_in %}
   let editLink = '<a id="nav-edit" href="/edit">Edit Home</a>';
   navHome.insertAdjacentHTML('afterend', editLink);
+  {% endif %}
   
   let homeContent = document.querySelector("#home");
   fetch("/home/raven?content_type=html")
