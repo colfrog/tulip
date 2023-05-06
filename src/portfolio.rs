@@ -1,6 +1,7 @@
 use rocket::fairing::AdHoc;
 use rocket::form::{Form, FromForm};
 use rocket::serde::{Serialize, Deserialize, json::Json};
+use rocket::response::Redirect;
 
 use rocket_sync_db_pools::rusqlite::params;
 
@@ -33,22 +34,17 @@ async fn portfolio(db: Db, username: User) -> Result<Json<Vec<Entry>>> {
 
 // TODO: Make this redirect to the portfolio
 #[post("/new", data = "<entry>")]
-async fn add_to_portfolio(db: Db, username: User, entry: Form<Entry>) -> Option<Json<Entry>> {
+async fn add_to_portfolio(db: Db, username: User, entry: Form<Entry>) -> Option<Redirect> {
     if !username.1 {
 	return None;
     }
     
-    let result = db.run(move |conn| {
+    db.run(move |conn| {
 	let _ = conn.execute("INSERT INTO portfolio (username, category, image) VALUES (?1, ?2, ?3)",
  			     params![username.0, entry.category, entry.image_id]);
-	conn.query_row("SELECT category, image FROM portfolio WHERE username = ?1 AND image = ?2 AND category = ?3",
-		       params![username.0, entry.image_id, entry.category], |row| Ok(Entry {
-			   category: row.get(0)?,
-			   image_id: row.get(1)?
-		       }))
-    }).await.ok()?;
+    }).await;
 
-    Some(Json(result))
+    Some(Redirect::to("/portfolio"))
 }
 
 pub fn stage() -> AdHoc {

@@ -1,6 +1,7 @@
 use rocket::fairing::AdHoc;
 use rocket::form::{Form, FromForm};
 use rocket::serde::{Serialize, Deserialize, json::Json};
+use rocket::response::Redirect;
 
 use rocket_sync_db_pools::rusqlite::params;
 use markdown_to_html::markdown;
@@ -74,41 +75,30 @@ async fn character_images(db: Db, username: User, name: String) -> Result<Json<V
 }
 
 #[post("/images/new", data = "<image>")]
-async fn add_image_to_character(db: Db, username: User, image: Form<CharacterImage>) -> Option<Json<CharacterImage>> {
+async fn add_image_to_character(db: Db, username: User, image: Form<CharacterImage>) -> Option<Redirect> {
     if !username.1 {
 	return None;
     }
 
-    let result = db.run(move |conn| {
+    db.run(move |conn| {
 	let _ = conn.execute("INSERT INTO character_images (username, charname, image) VALUES (?1, ?2, ?3)", params![username.0, image.name, image.image]);
-	conn.query_row("SELECT charname, image FROM character_images WHERE username = ?1 AND charname = ?2 AND image = ?3",
-		       params![username.0, image.name, image.image], |row| Ok(CharacterImage {
-			   name: row.get(0)?,
-			   image: row.get(1)?
-		       }))
-    }).await.ok()?;
+    }).await;
 
-    Some(Json(result))
+    Some(Redirect::to("/characters"))
 }
 
 // TODO: Make this redirect to characters
 #[post("/new", data = "<character>")]
-async fn new_character_form(db: Db, username: User, character: Form<Character>) -> Option<Json<Character>> {
+async fn new_character_form(db: Db, username: User, character: Form<Character>) -> Option<Redirect> {
     if !username.1 {
 	return None
     }
     
-    let result = db.run(move |conn| {
+    db.run(move |conn| {
 	let _ = conn.execute("INSERT INTO characters (username, charname, description, image) VALUES (?1, ?2, ?3, ?4)", params![username.0, character.name, character.description, character.image]);
-	conn.query_row("SELECT charname, description, image FROM characters WHERE username = ?1 AND charname = ?2 AND description = ?3",
-		       params![username.0, character.name, character.description], |row| Ok(Character {
-			   name: row.get(0)?,
-			   description: row.get(1)?,
-			   image: row.get(2)?
-		       }))
-    }).await.ok()?;
+    }).await;
 
-    Some(Json(result))
+    Some(Redirect::to("/characters"))
 }
 
 pub fn stage() -> AdHoc {
