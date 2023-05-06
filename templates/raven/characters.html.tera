@@ -108,7 +108,7 @@
 		let charList = document.querySelector("#character-list");
 		json.forEach(character => {
 			charList.innerHTML += `
-<div id="${character.name}" class="character-view">
+<div id="${character.name}" class="character-view" onclick="showCharacterImages('${character.name}')">
   <h3>${character.name}</h3>
   <img src="/i/raven/${character.image}" class="character-image"></img>
   <div class="character-description">
@@ -116,37 +116,40 @@
   </div>
 </div>
 `;
-			let char = document.querySelector(`#${character.name}`);
-			char.addEventListener('click', (e) => {
-				let imageList = document.querySelector("#character-image-list");
-
-				if (activeCharacter === character.name) {
-					imageList.innerHTML = "";
-					activeCharacter = "";
-				} else {
-					fetch(`/characters/images/${character.name}`)
-					.then(response => response.json())
-					.then(json => {
-						json.forEach(image => {
-							imageList.innerHTML +=
-								`
-<img id="${character.name}-${URLSafe(image)}" src="/i/raven/${image}"
-    class="character-image-list-image"></img>
-`;
-							let imageEl = document.querySelector(`#${character.name}-${URLSafe(image)}`);
-							imageEl.addEventListener('click', e => {
-								imageOverlay.style.visibility = "visible";
-								imageOverlay.innerHTML += `
-<img src="/i/raven/${image}"></img>
-`;
-							}, false);
-						});
-					});
-
-					activeCharacter = character.name;
-				}
-			}, false);
 		});
 	});
+
+  function showCharacterImages(character) {
+	  console.log('clicked');
+	  let imageList = document.querySelector("#character-image-list");
+
+	  if (activeCharacter === character) {
+		  imageList.innerHTML = "";
+		  activeCharacter = "";
+	  } else {
+		  imageList.innerHTML = "";
+		  fetch(`/characters/images/${character}`)
+			  .then(response => response.json())
+			  .then(json => {
+				  console.log(json);
+				  json.forEach(image => {
+					  imageList.innerHTML +=
+						  `
+<img id="${character}-${URLSafe(image)}" src="/i/raven/${image}" onclick="expandImage('${image}')"
+    class="character-image-list-image"></img>
+`;
+				  });
+			  });
+
+		  activeCharacter = character;
+	  }
+  }
+
+  function expandImage(image) {
+	  imageOverlay.style.visibility = "visible";
+	  imageOverlay.innerHTML += `
+<img src="/i/raven/${image}"></img>
+`;
+  }
 </script>
 {% endblock script %}

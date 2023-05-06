@@ -72,18 +72,16 @@
 			}
 			
 			category.innerHTML += `
-<img id="${categoryID}-${URLSafe(entry.image_id)}" src="/i/raven/${entry.image_id}" class="portfolio-image"></img>
+<img id="${categoryID}-${URLSafe(entry.image_id)}" src="/i/raven/${entry.image_id}" onclick="expandImage('${entry.image_id}')" class="portfolio-image"></img>
 `;
-			let imageEl = document.querySelector(`#${categoryID}-${URLSafe(entry.image_id)}`);
-			imageEl.addEventListener('click', e => {
-				let imageOverlay = document.querySelector("#image-overlay");
-				imageOverlay.style.visibility = "visible";
-				imageOverlay.innerHTML += `
-<img src="/i/raven/${entry.image_id}"></img>
-`;
-				
-			}, false);
 		});
 	});
+  
+  function expandImage(image) {
+	  imageOverlay.style.visibility = "visible";
+	  imageOverlay.innerHTML += `
+<img src="/i/raven/${image}"></img>
+`;
+  }
 </script>
 {% endblock script %}
