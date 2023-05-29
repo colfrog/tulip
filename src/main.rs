@@ -80,7 +80,7 @@ async fn login(db: Db, _user: User, jar: &CookieJar<'_>, login: Form<LoginForm<'
 		       params![username], |row| Ok(row.get(0)?))
     }).await.ok()?;
 
-    if password == login.password {
+    if _user.0 == login.username && password == login.password {
 	jar.add_private(Cookie::new("authenticated", "1"));
     }
     

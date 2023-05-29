@@ -87,7 +87,6 @@ async fn add_image_to_character(db: Db, username: User, image: Form<CharacterIma
     Some(Redirect::to("/characters"))
 }
 
-// TODO: Make this redirect to characters
 #[post("/new", data = "<character>")]
 async fn new_character_form(db: Db, username: User, character: Form<Character>) -> Option<Redirect> {
     if !username.1 {

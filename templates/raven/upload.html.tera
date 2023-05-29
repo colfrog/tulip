@@ -28,24 +28,22 @@
   navImages.insertAdjacentHTML('afterend', uploadLink);
 
   function uploadFile() {
-    let id = document.querySelector("#imageID").value;
-    let file = document.querySelector("#imageFile").files[0];
-    console.log(id);
-    if (id && file) {
-      fetch(`/i/raven/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "image/png"
-        },
-        body: file
-      })
-      .then(response => {
-        if (response.ok)
-          alert(`Uploaded file ${response.text()}`);
-        else
-          alert("File upload failed");
-      });
-    }
+	  let id = document.querySelector("#imageID").value;
+	  let file = document.querySelector("#imageFile").files[0];
+	  if (id && file) {
+		  fetch(`/i/raven/${id}`, {
+			  method: "POST",
+			  headers: {
+				  "Content-Type": "image/png"
+			  },
+			  body: file
+		  }).then(response => {
+			  if (response.ok)
+				  alert(`Uploaded file`);
+			  else
+				  alert("File upload failed");
+		  });
+	  }
   }
 </script>
 {% endblock script %}

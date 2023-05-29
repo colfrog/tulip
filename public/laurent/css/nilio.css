@@ -57,7 +57,7 @@ nav {
     justify-content: space-around;
     align-items: center;
     background-color: purple;
-    padding: 0 37vw;
+    padding: 0 33vw;
 }
 
 nav > a {
@@ -74,5 +74,6 @@ nav > a.activated {
 main {
     grid-area: main;
     background-color: #123453;
+    color: #dcdccc;
     overflow: scroll;
 }

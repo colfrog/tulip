@@ -131,8 +131,7 @@
 		  fetch(`/characters/images/${character}`)
 			  .then(response => response.json())
 			  .then(json => {
-				  console.log(json);
-				  json.forEach(image => {
+				  json.reverse().forEach(image => {
 					  imageList.innerHTML +=
 						  `
 <img id="${character}-${URLSafe(image)}" src="/i/raven/${image}" onclick="expandImage('${image}')"

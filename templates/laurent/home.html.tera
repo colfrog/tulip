@@ -5,9 +5,8 @@
 {% block style %}
 <style>
   #home-content {
-      margin: 10% 20%;
-      padding: 100px 5%;
-      min-height: 50%;
+      margin: 5% 5%;
+      padding: 50px 5%;
       background-color: grey;
   }
 

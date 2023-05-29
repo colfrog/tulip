@@ -32,7 +32,6 @@ async fn portfolio(db: Db, username: User) -> Result<Json<Vec<Entry>>> {
     Ok(Json(characters))
 }
 
-// TODO: Make this redirect to the portfolio
 #[post("/new", data = "<entry>")]
 async fn add_to_portfolio(db: Db, username: User, entry: Form<Entry>) -> Option<Redirect> {
     if !username.1 {
