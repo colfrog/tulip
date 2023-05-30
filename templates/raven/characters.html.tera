@@ -99,7 +99,7 @@
 	  imageOverlay.innerHTML = '';
   }, true);
   document.addEventListener('scroll', e => {
-	  imageOverlay.style.top = document.scrollingElement.scrollTop;
+	  imageOverlay.style.top = `${document.scrollingElement.scrollTop}px`;
   }, false);
 
   fetch("/characters/all")

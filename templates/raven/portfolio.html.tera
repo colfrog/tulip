@@ -10,14 +10,29 @@
   }
 
   main {
+      display: flex;
+      flex-direction: column;
+  }
+
+  aside {
+      background-color: black;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+  }
+  aside > p {
+      margin: 12px;
+  }
+
+  #portfolio {
       background-image: linear-gradient(#d38292, #eaf0e0);
       color: #293c4a;
-      min-height: 100vh;
   }
 
   .portfolio-image {
       max-height: 500px;
       max-width: 500px;
+      margin: 24px;
   }
   
   #image-overlay {
@@ -42,7 +57,8 @@
 {% endblock style %}
 
 {% block content %}
-<div id="image-overlay">
+<aside></aside>
+<div id="image-overlay" onclick="clickOverlay()">
 </div>
 <div id="portfolio">
 </div>
@@ -53,18 +69,19 @@
   let categoryToggled = {};
   let categoryImages = {};
   let imageOverlay = document.querySelector("#image-overlay");
-  imageOverlay.addEventListener('click', e => {
+  function clickOverlay() {
 	  imageOverlay.style.visibility = 'hidden';
 	  imageOverlay.innerHTML = '';
-  }, true);
-  document.addEventListener('scroll', e => {
-	  imageOverlay.style.top = document.scrollingElement.scrollTop;
+  }
+  document.addEventListener("scroll", e => {
+	  imageOverlay.style.top = `${document.scrollingElement.scrollTop}px`;
   }, false);
   
   fetch("/portfolio/all")
 	.then(response => response.json())
 	.then(json => {
 		let portfolio = document.querySelector("#portfolio");
+		let aside = document.querySelector("aside");
 		json.forEach(entry => {
 			let categoryID = entry.category.replace(/ /g, "-");
 			let category = document.querySelector(`#${categoryID}`);
@@ -73,6 +90,7 @@
 				category = document.querySelector(`#${categoryID}`);
 				categoryToggled[categoryID] = true;
 				categoryImages[categoryID] = "";
+				aside.innerHTML += `<p onclick="scrollToCategory('${categoryID}')">${entry.category}</p>`;
 			}
 
 			imagesEl = document.querySelector(`#${categoryID}-images`);
@@ -104,6 +122,10 @@
 		  document.querySelector(`#${categoryID}-images`).innerHTML = categoryImages[categoryID];
 		  categoryToggled[categoryID] = true;
 	  }
+  }
+
+  function scrollToCategory(id) {
+	  location.href = `/portfolio#${id}`;
   }
 </script>
 {% endblock script %}

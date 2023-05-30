@@ -4,8 +4,28 @@
 
 {% block style %}
 <style>
+  main {
+      display: grid;
+      grid-template-areas: "aside blog";
+      grid-template-rows: 1fr;
+      grid-template-columns: 25% 75%;
+      overflow: auto;
+  }
+
+  aside {
+      grid-area: aside;
+      background-color: #333;
+      color: #ddd;
+      overflow: scroll;
+  }
+
+  aside > h5 {
+      margin: 24px;
+  }
+
   #blog-content {
-      margin: 5% 5%;
+      grid-area: "blog";
+      overflow: scroll;
   }
 
   .post-content {
@@ -30,13 +50,14 @@
       flex-direction: column;
       text-align: center;
 
-      margin: 50px 0;
+      margin: 50px 5%;
       border-radius: 14px;
   }
 </style>
 {% endblock style %}
 
 {% block content %}
+<aside></aside>
 <div id="blog-content">
 </div>
 {% endblock content %}
@@ -51,61 +72,62 @@
   {% endif %}
   
   fetch("/blog/laurent")
-    .then(response => response.json())
-    .then(json => {
-	let blogContent = document.querySelector("#blog-content");
-	json.forEach(post => {
-	    blogContent.innerHTML += `
+	.then(response => response.json())
+	.then(json => {
+		let blogContent = document.querySelector("#blog-content");
+		let aside = document.querySelector("aside");
+		json.forEach(post => {
+			blogContent.innerHTML += `
 <div id="${postURL(post.title)}" class="post post${post.id}">
   <h1 onclick="togglePost(${post.id})">${post.title}</h1>
   <h5>${post.submitted}</h5>
 </div>
 `;
+			aside.innerHTML += `<h5 onclick="togglePost(${post.id})">${post.title}</h5>`;
+		});
+
+		return json;
+	})
+	.then(json => {
+		json.forEach(post => {
+			if (location.href.endsWith(`#${postURL(post.title)}`))
+				togglePost(post.id);
+		});
 	});
-	
-	return json;
-    })
-    .then(json => {
-	json.forEach(post => {
-	    if (location.href.endsWith(`#${postURL(post.title)}`))
-		togglePost(post.id);
-	});
-    });
   
   const punctuation = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
   function removePunctuation(string) {
-      return string
-	  .split('')
-	  .filter(function(letter) {
-	      return punctuation.indexOf(letter) === -1;
-	  })
-	  .join('');
+	  return string
+		  .split('')
+		  .filter(function(letter) {
+			  return punctuation.indexOf(letter) === -1;
+		  })
+		  .join('');
   }
   
   function postURL(title) {
-      let url = title.toLowerCase();
-      url = removePunctuation(url);
-      url = url.replace(/ /g, '-');
-      return url;
+	  let url = title.toLowerCase();
+	  url = removePunctuation(url);
+	  url = url.replace(/ /g, '-');
+	  return url;
   }
 
   function togglePost(id) {
-      console.log("Toggle post called", id);
-      let post = document.querySelector(`.post${id}`);
-      let content = document.querySelector(`#content${id}`);
-      if (!content)
-	  fetch(`/blog/laurent/${id}`)
-	  .then(response => response.text())
-	  .then(html => {
-	      post.innerHTML += `
+	  console.log("Toggle post called", id);
+	  let post = document.querySelector(`.post${id}`);
+	  let content = document.querySelector(`#content${id}`);
+	  if (!content)
+		  fetch(`/blog/laurent/${id}`)
+		  .then(response => response.text())
+		  .then(html => {
+			  post.innerHTML += `
 <article id="content${id}" class="post-content">${html}</article>
 `;
-	      location.href = `#${post.id}`;
-	      
-	  });
-      else {
-	  post.removeChild(content);
-      }
+			  location.href = `#${post.id}`;
+		  });
+	  else {
+		  post.removeChild(content);
+	  }
   }
 </script>
 {% endblock script %}

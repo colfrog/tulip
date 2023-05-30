@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <title>Raven - {% block title %}{% endblock title %}</title>

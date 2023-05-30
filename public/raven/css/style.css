@@ -50,7 +50,7 @@ nav a {
 }
 
 main {
-  min-height: calc(100vh - 300px);
+    min-height: calc(100vh - 300px);
 }
 
 h1, h2, h3, h4, h5 {
