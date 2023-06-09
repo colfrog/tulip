@@ -30,8 +30,8 @@
   }
 
   .portfolio-image {
-      max-height: 500px;
-      max-width: 500px;
+      max-height: 240px;
+      max-width: 240px;
       margin: 24px;
   }
   

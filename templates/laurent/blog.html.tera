@@ -8,7 +8,7 @@
       display: grid;
       grid-template-areas: "aside blog";
       grid-template-rows: 1fr;
-      grid-template-columns: 25% 75%;
+      grid-template-columns: min(25%, 200px) 1fr;
       overflow: auto;
   }
 

@@ -16,7 +16,7 @@ header {
     grid-area: header;
     display: flex;
     color: white;
-    background-color: red;
+    background-color: #7f1c72;
     justify-content: center;
     align-items: center;
     height: 100px;
@@ -44,7 +44,7 @@ footer {
     align-items: center;
     justify-content: flex-end;
     color: white;
-    background-color: blue;
+    background-color: #18b1b1;
     text-align: right;
     padding: 0 100px;
     height: 40px;
@@ -56,15 +56,16 @@ nav {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    background-color: purple;
+    background-color: #7f1c72;
     padding: 0 33vw;
 }
 
 nav > a {
     color: black;
-    background-color: red;
+    background-color: #e76f51;
     text-decoration: none;
     padding: 5px 10px;
+    border-radius: 7px;
 }
 
 nav > a.activated {
