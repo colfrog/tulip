@@ -1,4 +1,4 @@
-main {
+#blog-main {
     display: grid;
     grid-template-areas: "aside blog";
     grid-template-rows: 1fr;

@@ -40,37 +40,31 @@ function Post(props) {
 }
 
 export function Blog() {
-    let [postTitles, setPostTitles] = useState([]);
+    let [asideList, setAsideList] = useState([]);
     let [postList, setPostList] = useState([]);
+    let togglePost = (title) => {
+        window.location.href = `#${postURL(title)}`;
+    };
 
     fetch("/blog/laurent")
 	.then(response => response.json())
 	.then(json => {
-	    let blogContent = document.querySelector("#blog-content");
-	    let aside = document.querySelector("aside");
+            let list = [];
+            let sideList = [];
 	    json.forEach(post => {
-		blogContent.innerHTML += `
-<div id="${postURL(post.title)}" class="post post${post.id}">
-  <h1 onclick="togglePost(${post.id})">${post.title}</h1>
-  <h5>${post.submitted}</h5>
-</div>
-`;
-		aside.innerHTML += `<h5 onclick="togglePost(${post.id})">${post.title}</h5>`;
+                list.append(<Post post={post} key={post.id} />);
+		sideList.append(<h5 onclick={togglePost(post.title)} key={post.id}>${post.title}</h5>);
 	    });
 
-	    return json;
-	})
-	.then(json => {
-	    json.forEach(post => {
-		if (window.location.href.endsWith(`#${postURL(post.title)}`))
-		    togglePost(post.id);
-	    });
+            setPostList(list);
+            setAsideList(sideList);
 	});
     
     return (
-        <main>
-          <aside></aside>
+        <main id="blog-main">
+          <aside>{asideList}</aside>
           <div id="blog-content">
+            {postList}
           </div>
         </main>
     );
