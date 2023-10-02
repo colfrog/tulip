@@ -72,11 +72,6 @@
 {% endblock style %}
 
 {% block content %}
-<div id="edit-button">
-{% if logged_in %}
-<button onclick="enterEditMode()">edit</button>
-{% endif %}
-</div>
 <div id="characters">
   <div id="image-overlay">
   </div>
@@ -89,7 +84,6 @@
 
 {% block script %}
 <script>
-  let editMode = false;
   var activeCharacter = "";
   let navCharacters = document.querySelector("#nav-characters");
   navCharacters.className = "activated";
@@ -123,10 +117,6 @@
 </div>
 `;
 		});
-		if (editMode)
-			document.querySelector(`#${character.name}`).innerHTML += `
-<button>delete</button>
-`;
 	});
 
   function showCharacterImages(character) {
@@ -158,16 +148,6 @@
 	  imageOverlay.innerHTML += `
 <img src="/i/raven/${image}"></img>
 `;
-  }
-
-  function enterEditMode() {
-	  editMode = true;
-	  document.querySelector("#edit-button").innerHTML = `<button id="edit_button" onclick="exitEditMode()">quit</button>`;
-  }
-  
-  function exitEditMode() {
-	  editMode = false;
-	  document.querySelector("#edit-button").innerHTML = `<button id="edit_button" onclick="enterEditMode()">edit</button>`;
   }
 </script>
 {% endblock script %}
