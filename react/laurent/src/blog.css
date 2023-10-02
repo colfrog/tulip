@@ -1,0 +1,49 @@
+main {
+    display: grid;
+    grid-template-areas: "aside blog";
+    grid-template-rows: 1fr;
+    grid-template-columns: min(25%, 200px) 1fr;
+    overflow: auto;
+}
+
+aside {
+    grid-area: aside;
+    background-color: #333;
+    color: #ddd;
+    overflow: scroll;
+}
+
+aside > h5 {
+    margin: 24px;
+}
+
+#blog-content {
+    grid-area: "blog";
+    overflow: scroll;
+}
+
+.post-content {
+    display: block;
+    padding: 40px;
+    margin-top: 10px;
+    text-align: left;
+    background-color: lightgreen;
+    color: black;
+}
+
+.post-content img {
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+}
+
+.post {
+    background-color: teal;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+
+    margin: 50px 5%;
+    border-radius: 14px;
+}
