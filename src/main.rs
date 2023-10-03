@@ -12,7 +12,6 @@ use rocket::request::Outcome;
 use rocket::request::FromRequest;
 
 use rocket_sync_db_pools::{rusqlite, database};
-use rocket_dyn_templates::{Template, context};
 use self::rusqlite::params;
 
 use std::fs;
@@ -93,23 +92,36 @@ fn logout(jar: &CookieJar<'_>) -> Redirect {
     Redirect::to("/")
 }
 
+//#[get("/")]
+//async fn get_home(_user: User) -> Template {
+//    Template::render(_user.0 + "/home", context! {
+//	logged_in: _user.1
+//    })
+//}
+
+//#[get("/<template>")]
+//async fn get_template(_user: User, template: &str) -> Template {
+//    Template::render(_user.0 + "/" + template, context! {
+//	logged_in: _user.1
+//    })
+//}
+
 #[get("/")]
-async fn get_home(_user: User) -> Template {
-    Template::render(_user.0 + "/home", context! {
-	logged_in: _user.1
-    })
+async fn get_home(_user: User) -> Option<NamedFile> {
+    let path_string: String = "react/".to_owned() + &_user.0 + &"/build/index.html".to_owned();
+    let path = Path::new(&path_string);
+    NamedFile::open(path).await.ok()
 }
 
-#[get("/<template>")]
-async fn get_template(_user: User, template: &str) -> Template {
-    Template::render(_user.0 + "/" + template, context! {
-	logged_in: _user.1
-    })
+#[get("/<_>")]
+async fn get_react_path(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
 }
 
 #[get("/<path..>", rank = 1)]
 async fn public(_user: User, path: PathBuf) -> Option<NamedFile> {
-    let mut path = Path::new(&("public/".to_owned() + &_user.0)).join(path);
+    let path_string: String = "react/".to_owned() + &_user.0 + &"/build".to_owned();
+    let mut path = Path::new(&path_string).join(path);
     if path.is_dir() {
         path.push("index.html");
     }
@@ -121,7 +133,6 @@ async fn public(_user: User, path: PathBuf) -> Option<NamedFile> {
 fn rocket() -> _ {
     rocket::build()
 	.attach(Db::fairing())
-	.attach(Template::fairing())
         .attach(AdHoc::on_ignite("Init DB", init_db))
 	.attach(home::stage())
 	.attach(blog::stage())
@@ -129,7 +140,7 @@ fn rocket() -> _ {
 	.attach(todo::stage())
 	.attach(characters::stage())
 	.attach(portfolio::stage())
-	.mount("/", routes![login, logout, get_home, get_template, public])
+	.mount("/", routes![login, logout, get_home, get_react_path, public])
 }
 
 async fn init_db(rocket: Rocket<Build>) -> Rocket<Build> {
