@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import { postURL } from './postURL';
 import './blog.css';
 
-let currentPost = '';
-
 function Post(props) {
     let [content, setContent] = useState('');
     let [showContent, setShowContent] = useState(false);
