@@ -32,9 +32,12 @@ aside > h5 {
 }
 
 .post-content img {
+    display: block;
     object-fit: contain;
-    width: 100%;
+    max-width: 80%;
+    max-height: 70vh;
     height: auto;
+    margin: auto;
 }
 
 .post {

@@ -1,0 +1,29 @@
+#image-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 50px;
+}
+
+#image-list img {
+    max-width: 500px;
+    max-height: 500px;
+    margin-bottom: 10px;
+}
+
+#image-list .image {
+    width: 500px;
+    height: 700px;
+    margin: 24px;
+    text-align: center;
+    color: white;
+}
+
+.image-view {
+    display: flex;
+    flex-direction: column;
+}
+
+.image-form {
+    text-align: left;
+}

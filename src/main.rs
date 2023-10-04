@@ -92,20 +92,6 @@ fn logout(jar: &CookieJar<'_>) -> Redirect {
     Redirect::to("/")
 }
 
-//#[get("/")]
-//async fn get_home(_user: User) -> Template {
-//    Template::render(_user.0 + "/home", context! {
-//	logged_in: _user.1
-//    })
-//}
-
-//#[get("/<template>")]
-//async fn get_template(_user: User, template: &str) -> Template {
-//    Template::render(_user.0 + "/" + template, context! {
-//	logged_in: _user.1
-//    })
-//}
-
 #[get("/")]
 async fn get_home(_user: User) -> Option<NamedFile> {
     let path_string: String = "react/".to_owned() + &_user.0 + &"/build/index.html".to_owned();
@@ -143,6 +129,21 @@ async fn get_login(_user: User) -> Option<NamedFile> {
     get_home(_user).await
 }
 
+#[get("/characters")]
+async fn get_characters(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/new-character")]
+async fn get_new_character(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/portfolio")]
+async fn get_portfolio(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
 #[get("/<path..>", rank = 1)]
 async fn public(_user: User, path: PathBuf) -> Option<NamedFile> {
     let path_string: String = "react/".to_owned() + &_user.0 + &"/build".to_owned();
@@ -165,7 +166,7 @@ fn rocket() -> _ {
 	.attach(todo::stage())
 	.attach(characters::stage())
 	.attach(portfolio::stage())
-	.mount("/", routes![login, logout, get_home, get_edit, get_blog, get_new, get_images, get_upload, get_login, public])
+	.mount("/", routes![login, logout, get_home, get_edit, get_blog, get_new, get_images, get_upload, get_login, get_characters, get_new_character, get_portfolio, public])
 }
 
 async fn init_db(rocket: Rocket<Build>) -> Rocket<Build> {
