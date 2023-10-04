@@ -7,12 +7,12 @@ import { Blog } from './Blog';
 import { NewPost } from './NewPost';
 import { Images } from './Images';
 import { Upload } from './Upload';
-import { Login, Logout } from './Login';
+import { Login } from './Login';
 
 const loggedIn = true;
 
 function Header() {
-    let loginLink = "/logout";
+    let loginLink = "/login";//"/logout";
     if (!loggedIn)
         loginLink = "/login";
 
@@ -87,7 +87,6 @@ function App() {
             <Route path="/images" element={<Images />} />
             <Route path="/upload" element={<Upload />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/logout" element={<Logout />} />
           </Routes>
           <Footer />
         </BrowserRouter>

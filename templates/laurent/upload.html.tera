@@ -18,7 +18,6 @@
   <label for="imageFile">File: </label>
   <input id="imageFile" type="file" accept="image/png,image/jpeg" /><br />
   <button onclick="uploadFile()">upload</button>
-  </form>
 </div>
 {% endblock content %}
 

@@ -82,7 +82,7 @@ async fn login(db: Db, _user: User, jar: &CookieJar<'_>, login: Form<LoginForm<'
     if _user.0 == login.username && password == login.password {
 	jar.add_private(Cookie::new("authenticated", "1"));
     }
-    
+
     Some(Redirect::to("/"))
 }
 
@@ -113,8 +113,33 @@ async fn get_home(_user: User) -> Option<NamedFile> {
     NamedFile::open(path).await.ok()
 }
 
-#[get("/<_>")]
-async fn get_react_path(_user: User) -> Option<NamedFile> {
+#[get("/edit")]
+async fn get_edit(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/blog")]
+async fn get_blog(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/new")]
+async fn get_new(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/images")]
+async fn get_images(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/upload")]
+async fn get_upload(_user: User) -> Option<NamedFile> {
+    get_home(_user).await
+}
+
+#[get("/login")]
+async fn get_login(_user: User) -> Option<NamedFile> {
     get_home(_user).await
 }
 
@@ -140,7 +165,7 @@ fn rocket() -> _ {
 	.attach(todo::stage())
 	.attach(characters::stage())
 	.attach(portfolio::stage())
-	.mount("/", routes![login, logout, get_home, get_react_path, public])
+	.mount("/", routes![login, logout, get_home, get_edit, get_blog, get_new, get_images, get_upload, get_login, public])
 }
 
 async fn init_db(rocket: Rocket<Build>) -> Rocket<Build> {
