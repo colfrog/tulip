@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
 
-import './edit.css';
-
 export function Edit() {
     let [content, setContent] = useState('');
 
@@ -27,9 +25,17 @@ export function Edit() {
     
     return (
         <main>
-          <article id="edit">
+          <article style={{
+              display: "flex",
+              flexDirection: "column",
+              color: "white",
+              margin: "5% 20%"
+          }}>
             <h3>Edit Home Text</h3>
-            <textarea id="homeEdit" value={content} onChange={handleChange}>
+            <textarea id="homeEdit" style={{
+                width: "100%", height: "400px"
+            }}
+                      value={content} onChange={handleChange}>
             </textarea>
             <button onClick={editHome}>edit</button>
           </article>
