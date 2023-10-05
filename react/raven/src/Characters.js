@@ -4,8 +4,6 @@ function CharacterImageList({character}) {
     let [images, setImages] = useState({});
     let [imageList, setImageList] = useState([]);
     let buildImageList = () => {
-        console.log(`buildImageList called for ${character}`);
-        console.log(images);
         let list = [];
 	images[character].forEach((image, index) => {
 	    list.push(<img style={{
@@ -79,7 +77,6 @@ export function Characters() {
         let list = [];
 	characters.forEach(character => {
             let showCharacterList = () => {
-                console.log(`${character.name} clicked`);
                 if (characterShown === character.name)
                     setCharacterShown(null);
                 else
