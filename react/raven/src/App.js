@@ -54,13 +54,38 @@ function Navigation() {
     );
 }
 
+function Header() {
+    let location = useLocation();
+    let isInPaths = (paths) => paths.includes(location.pathname);
+
+    let defaultHeader = {};
+    let characterHeader = {
+        backgroundImage: "none",
+        backgroundColor: "pink"
+    };
+    let portfolioHeader = {
+        backgroundImage: "none",
+        backgroundColor: "#1a262f"
+    };
+
+    let headerStyle = defaultHeader;
+    if (isInPaths(["/characters", "/new-character"]))
+        headerStyle = characterHeader;
+    else if (isInPaths(["/portfolio"]))
+        headerStyle = portfolioHeader;
+
+    return (
+        <header style={headerStyle}>
+          <h1>Raven</h1>
+          <Navigation />
+        </header>
+    );
+}
+
 function App() {
     return (
         <BrowserRouter>
-          <header>
-            <h1>Raven</h1>
-            <Navigation />
-          </header>
+          <Header />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/edit" element={<Edit />} />
