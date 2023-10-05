@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
 
+import { Image } from './Image';
+
 function CharacterImageList({character}) {
     let [images, setImages] = useState({});
     let [imageList, setImageList] = useState([]);
     let buildImageList = () => {
         let list = [];
 	images[character].forEach((image, index) => {
-	    list.push(<img style={{
+	    list.push(<Image style={{
                 width: "240px",
                 height: "auto",
                 margin: "24px"
-            }} src={`/i/raven/${image}`} alt={image} key={index}></img>);
+            }} src={`/i/raven/${image}`} alt={image} key={index} />);
 	});
         setImageList(list);
     };

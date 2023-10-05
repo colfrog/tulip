@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import { Image } from './Image';
+
 function makeCategoryID(category) {
     return category.replace(/ /g, "-");
 }
@@ -43,7 +45,7 @@ function Category({name, images}) {
             margin: "24px"
         };
         images.forEach((image, index) => {
-            list.push(<img style={imageStyle} src={`/i/raven/${image}`} alt={image}></img>);
+            list.push(<Image style={imageStyle} src={`/i/raven/${image}`} alt={image} />);
         });
         setImageList(list);
     }, []);

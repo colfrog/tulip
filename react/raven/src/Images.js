@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 
+import { Image } from './Image';
 import { postURL } from './postURL';
 import './images.css';
 
-function Image({imageId}) {
+function ImageEntry({imageId}) {
     return (
         <div class="image-view">
           <div id={postURL(imageId)} class="image">
-            <img src={`/i/raven/${imageId}`} alt={imageId}></img>
+            <Image src={`/i/raven/${imageId}`} alt={imageId} />
             <h5>{imageId}</h5>
           </div>
 
@@ -39,7 +40,7 @@ export function Images() {
             .then(json => {
 	        let list = [];
 	        json.forEach((imageId, index) => {
-                    list.push(<Image imageId={imageId} key={index} />);
+                    list.push(<ImageEntry imageId={imageId} key={index} />);
                 });
 
                 setImageList(list);
