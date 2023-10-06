@@ -42,7 +42,8 @@ function CharacterImageList({character}) {
     return (
         <div style={{
             display: "flex",
-            flexWrap: "wrap"
+            flexWrap: "wrap",
+            margin: "100px"
         }} id="character-image-list">
           {imageList}
         </div>
