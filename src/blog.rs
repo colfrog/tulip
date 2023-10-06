@@ -1,6 +1,7 @@
 use rocket::fairing::AdHoc;
 use rocket::form::{Form, FromForm};
 use rocket::response::content::RawHtml;
+use rocket::response::Redirect;
 use rocket::serde::{Serialize, Deserialize, json::Json};
 
 use rocket_sync_db_pools::rusqlite::params;
@@ -51,7 +52,7 @@ async fn blog_post(db: Db, username: String, id: u64) -> Option<RawHtml<String>>
 }
 
 #[post("/<username>", data = "<post>")]
-async fn new_blog_post(db: Db, _user: User, username: String, post: Json<Post>) -> Option<Json<Post>> {
+async fn new_blog_post(db: Db, _user: User, username: String, post: Json<Post>) -> Option<Redirect> {
     if !_user.1 {
 	return None
     }
@@ -61,18 +62,18 @@ async fn new_blog_post(db: Db, _user: User, username: String, post: Json<Post>) 
 	conn.execute("INSERT INTO posts (username, title, markdown) VALUES (?1, ?2, ?3);", params![username, db_post.title, db_post.markdown])
     }).await.ok()?;
 
-    Some(post)
+    Some(Redirect::to("/blog"))
 }
 
 #[post("/new", data = "<post>")]
-async fn new_blog_post_form(db: Db, username: User, post: Form<Post>) -> Option<Json<Post>> {
+async fn new_blog_post_form(db: Db, username: User, post: Form<Post>) -> Option<Redirect> {
     if !username.1 {
 	return None
     }
     
     let db_title = post.title.clone();
     let db_markdown = post.markdown.clone();
-    let result = db.run(move |conn| {
+    let _result = db.run(move |conn| {
 	let _ = conn.execute("INSERT INTO posts (username, title, markdown) VALUES (?1, ?2, ?3);", params![username.0, db_title, db_markdown]);
 	conn.query_row("SELECT id, title, submitted, markdown FROM posts WHERE username = ?1 AND title = ?2 AND markdown = ?3",
 		       params![username.0, db_title, db_markdown], |row| Ok(Post {
@@ -83,7 +84,7 @@ async fn new_blog_post_form(db: Db, username: User, post: Form<Post>) -> Option<
 		       }))
     }).await.ok()?;
 
-    Some(Json(result))
+    Some(Redirect::to("/blog"))
 }
 
 pub fn stage() -> AdHoc {

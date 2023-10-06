@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
@@ -9,18 +10,16 @@ import { Images } from './Images';
 import { Upload } from './Upload';
 import { Login } from './Login';
 
-const loggedIn = true;
-
-function Header() {
-    let loginLink = "/login";//"/logout";
-    if (!loggedIn)
-        loginLink = "/login";
+function Header({loggedIn}) {
+    let loginLink = "/login";
+    if (loggedIn)
+        loginLink = "/logout";
 
     return (
         <header>
-          <Link to={loginLink}>
+          <a href={loginLink}>
 	    <img src="/images/head.jpg" alt="My face" />
-          </Link>
+          </a>
           <div id="headerText">
 	    <h1>Laurent</h1>
 	    <h4>Full-Stack Developer</h4>
@@ -35,7 +34,7 @@ function Header() {
     );
 }
 
-function Navigation() {
+function Navigation({loggedIn}) {
     let location = useLocation();
     let isActivePath = (path) => location.pathname === path ? 'activated' : '';
     let isInPaths = (paths) => paths.includes(location.pathname);
@@ -75,10 +74,17 @@ function Footer() {
 }
 
 function App() {
+    let [loggedIn, setLoggedIn] = useState(false);
+    useEffect(() => {
+        fetch("/loggedin")
+            .then(response => response.json())
+            .then(json => setLoggedIn(json));
+    }, []);
+
     return (
         <BrowserRouter>
-          <Header />
-          <Navigation />
+          <Header loggedIn={loggedIn} />
+          <Navigation loggedIn={loggedIn} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/edit" element={<Edit />} />

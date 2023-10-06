@@ -10,6 +10,7 @@ use rocket::Request;
 use rocket::request;
 use rocket::request::Outcome;
 use rocket::request::FromRequest;
+use rocket::serde::json::Json;
 
 use rocket_sync_db_pools::{rusqlite, database};
 use self::rusqlite::params;
@@ -84,6 +85,11 @@ async fn login(db: Db, _user: User, jar: &CookieJar<'_>, login: Form<LoginForm<'
     }
 
     Some(Redirect::to("/"))
+}
+
+#[get("/loggedin")]
+async fn get_logged_in(_user: User) -> Json<bool> {
+    Json(_user.1)
 }
 
 #[get("/logout")]
@@ -166,7 +172,7 @@ fn rocket() -> _ {
 	.attach(todo::stage())
 	.attach(characters::stage())
 	.attach(portfolio::stage())
-	.mount("/", routes![login, logout, get_home, get_edit, get_blog, get_new, get_images, get_upload, get_login, get_characters, get_new_character, get_portfolio, public])
+	.mount("/", routes![login, get_logged_in, logout, get_home, get_edit, get_blog, get_new, get_images, get_upload, get_login, get_characters, get_new_character, get_portfolio, public])
 }
 
 async fn init_db(rocket: Rocket<Build>) -> Rocket<Build> {

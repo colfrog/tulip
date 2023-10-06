@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Link } from 'react-router-dom';
 
@@ -10,17 +11,15 @@ import { Images } from './Images';
 import { Upload } from './Upload';
 import { Login } from './Login';
 
-const loggedIn = true;
-
-function Navigation() {
+function Navigation({loggedIn}) {
     let location = useLocation();
     let isActivePath = (path) => location.pathname === path ? 'activated' : '';
     let isInPaths = (paths) => paths.includes(location.pathname);
 
     let login = null;
-    /*if (loggedIn)
-        login = <Link className={isActivePath("/logout")} to="/logout">Log out</Link>;
-    else*/
+    if (loggedIn)
+        login = <a href="/logout">Log out</a>;
+    else
         login = <Link className={isActivePath("/login")} to="/login">Log in</Link>;
 
     let edit = null;
@@ -54,7 +53,7 @@ function Navigation() {
     );
 }
 
-function Header() {
+function Header({loggedIn}) {
     let location = useLocation();
     let isInPaths = (paths) => paths.includes(location.pathname);
 
@@ -77,15 +76,24 @@ function Header() {
     return (
         <header style={headerStyle}>
           <h1>Raven</h1>
-          <Navigation />
+          <Navigation loggedIn={loggedIn} />
         </header>
     );
 }
 
 function App() {
+    let [loggedIn, setLoggedIn] = useState(false);
+    useEffect(() => {
+        fetch("/loggedin")
+            .then(response => response.json())
+            .then(json => setLoggedIn(json));
+    }, []);
+
+    console.log(loggedIn);
+
     return (
         <BrowserRouter>
-          <Header />
+          <Header loggedIn={loggedIn} />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/edit" element={<Edit />} />
