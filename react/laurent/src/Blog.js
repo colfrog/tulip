@@ -58,16 +58,16 @@ export function Blog() {
     let [asideList, setAsideList] = useState([]);
     let [postList, setPostList] = useState([]);
     let [postObjList, setPostObjList] = useState([]);
-    let [fetched, setFetched] = useState(false);
     let [currentPost, setCurrentPost] = useState('');
-    let togglePost = (title) => {
+    let [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const togglePost = (title) => {
         if (currentPost !== title)
             setCurrentPost(`${title}`);
         else
             setCurrentPost('');
     };
 
-    let buildPostList = (posts) => {
+    const buildPostList = (posts) => {
         let list = [];
         let sideList = [];
 	posts.forEach(post => {
@@ -79,21 +79,19 @@ export function Blog() {
         setAsideList(sideList);
     };
 
-    if (!fetched) {
+    useEffect(() => {
         fetch("/blog/laurent")
 	    .then(response => response.json())
 	    .then(json => {
                 buildPostList(json);
                 setPostObjList(json);
-                setFetched(true);
 	    });
-    }
-
+    }, []);
     useEffect(() => buildPostList(postObjList), [currentPost]);
-    
+
     return (
         <main id="blog-main">
-          <aside>{asideList}</aside>
+          <aside id="blog-aside">{asideList}</aside>
           <div id="blog-content">
             {postList}
           </div>

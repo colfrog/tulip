@@ -1,25 +1,33 @@
-#blog-main {
-    display: grid;
-    grid-template-areas: "aside blog";
-    grid-template-rows: 1fr;
-    grid-template-columns: min(25%, 200px) 1fr;
-    overflow: auto;
+@media screen and (min-width: 800px) {
+    #blog-main {
+	display: grid;
+	grid-template-areas: "aside blog";
+	grid-template-rows: 1fr;
+	grid-template-columns: min(25%, 200px) 1fr;
+	overflow: auto;
+    }
+
+    #blog-aside {
+	grid-area: aside;
+	background-color: #333;
+	color: #ddd;
+	overflow: scroll;
+    }
+
+    #blog-aside > h5 {
+	margin: 24px;
+    }
+
+    #blog-content {
+	grid-area: "blog";
+	overflow: scroll;
+    }
 }
 
-aside {
-    grid-area: aside;
-    background-color: #333;
-    color: #ddd;
-    overflow: scroll;
-}
-
-aside > h5 {
-    margin: 24px;
-}
-
-#blog-content {
-    grid-area: "blog";
-    overflow: scroll;
+@media screen and (max-width: 799px) {
+    #blog-aside {
+	display: none;
+    }
 }
 
 .post-content {
@@ -34,8 +42,8 @@ aside > h5 {
 .post-content img {
     display: block;
     object-fit: contain;
-    max-width: 80%;
-    max-height: 70vh;
+    max-width: 100%;
+    width: auto;
     height: auto;
     margin: auto;
 }
@@ -47,6 +55,16 @@ aside > h5 {
     flex-direction: column;
     text-align: center;
 
-    margin: 50px 5%;
+    margin: 48px 5%;
     border-radius: 14px;
+}
+
+@media screen and (max-width: 799px) {
+    .post-content {
+	padding: 10px;
+    }
+
+    .post {
+	margin: 48px 8px;
+    }
 }
