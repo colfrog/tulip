@@ -29,6 +29,9 @@ function Header({loggedIn}) {
 	    <a href="https://github.com/colfrog">
 	      <img src="/images/Github Mark.png" alt="Github" />
 	    </a>
+	    <a href="https://bsd.network/@xi">
+	      <img src="/images/Mastodon.svg" alt="Mastodon" />
+	    </a>
           </div>
         </header>
     );
