@@ -79,3 +79,11 @@ main {
     color: #dcdccc;
     overflow: scroll;
 }
+
+body img {
+    display: none;
+}
+
+main img {
+    display: block;
+}
