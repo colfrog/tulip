@@ -89,8 +89,6 @@ function App() {
             .then(json => setLoggedIn(json));
     }, []);
 
-    console.log(loggedIn);
-
     return (
         <BrowserRouter>
           <Header loggedIn={loggedIn} />

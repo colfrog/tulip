@@ -83,19 +83,3 @@ main {
     color: #dcdccc;
     overflow: scroll;
 }
-
-body img {
-    display: none;
-}
-
-header img {
-    display: block;
-}
-
-main img {
-    display: block;
-}
-
-div img {
-    display: block;
-}
