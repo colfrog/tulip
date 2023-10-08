@@ -33,6 +33,10 @@ header img {
 #icons {
     display: flex;
     flex-direction: column;
+    height: 100%;
+}
+#icons a {
+    margin: auto;
 }
 #icons img {
     width: 32px;
@@ -84,6 +88,14 @@ body img {
     display: none;
 }
 
+header img {
+    display: block;
+}
+
 main img {
+    display: block;
+}
+
+div img {
     display: block;
 }

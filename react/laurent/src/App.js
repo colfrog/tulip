@@ -23,13 +23,13 @@ function Header({loggedIn}) {
           <div id="headerText">
 	    <h1>Laurent</h1>
 	    <h4>Full-Stack Developer</h4>
-	    <p>Rust | C++ | Python | React | Node.js</p>
+	    <p>Rust | C++ | Python | React</p>
           </div>
           <div id="icons">
-	    <a href="https://github.com/colfrog">
+	    <a style={{marginBottom: "4px"}} href="https://github.com/colfrog">
 	      <img src="/images/Github Mark.png" alt="Github" />
 	    </a>
-	    <a href="https://bsd.network/@xi">
+	    <a style={{marginTop: "4px"}} href="https://bsd.network/@xi">
 	      <img src="/images/Mastodon.svg" alt="Mastodon" />
 	    </a>
           </div>
