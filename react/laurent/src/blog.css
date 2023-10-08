@@ -14,8 +14,12 @@
 	overflow: scroll;
     }
 
-    #blog-aside > h5 {
+    #blog-aside h5 {
 	margin: 24px;
+    }
+
+    #blog-aside h5:hover {
+	cursor: pointer;
     }
 
     #blog-content {
@@ -61,6 +65,10 @@
 
     margin: 48px 5%;
     border-radius: 14px;
+}
+
+.post h1:hover {
+    cursor: pointer;
 }
 
 @media screen and (max-width: 799px) {

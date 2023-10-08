@@ -76,7 +76,6 @@ export function Blog({loggedIn}) {
     let [postList, setPostList] = useState([]);
     let [postObjList, setPostObjList] = useState([]);
     let [currentPost, setCurrentPost] = useState('');
-    let [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const togglePost = (title) => {
         if (currentPost !== title)
             setCurrentPost(`${title}`);
