@@ -1,22 +1,36 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 export function Edit() {
+    const [searchParams] = useSearchParams();
     let [content, setContent] = useState('');
+    let [postId, setPostId] = useState(null);
 
     useEffect(() => {
-        fetch("/home/laurent?content_type=markdown")
+        let id = searchParams.get("post") || null;
+        if (id)
+            fetch(`blog/${id}?content_type=markdown`)
             .then(response => response.text())
             .then(text => setContent(text));
-    }, []);
+        else
+            fetch("/home/laurent?content_type=markdown")
+            .then(response => response.text())
+            .then(text => setContent(text));
 
-    let editHome = () => {
-        fetch("/home/laurent", {
+        setPostId(id);
+    }, [searchParams]);
+
+    let edit = () => {
+        let url = postId ? `/blog/${postId}` : "/home/laurent";
+        let to_url = postId ? "/blog" : "/";
+        fetch(url, {
 	    method: "PUT",
 	    headers: {
 	        "Content-Type": "text/plain"
 	    },
 	    body: content
-        }).then(response => window.location.replace("/"));
+        })
+            .then(response => window.location.replace(to_url));
     };
 
     let handleChange = (event) => {
@@ -37,7 +51,7 @@ export function Edit() {
             }}
                       value={content} onChange={handleChange}>
             </textarea>
-            <button onClick={editHome}>edit</button>
+            <button onClick={edit}>edit</button>
           </article>
         </main>
     );

@@ -36,8 +36,9 @@ async fn blog_posts(db: Db, username: String) -> Result<Json<Vec<Post>>> {
     Ok(Json(posts))
 }
 
-#[get("/<username>/<id>")]
-async fn blog_post(db: Db, username: String, id: u64) -> Option<RawHtml<String>> {
+#[get("/<id>?<content_type>")]
+async fn blog_post(db: Db, user: User, id: u64, content_type: &str) -> Option<RawHtml<String>> {
+    let username: String = user.0.to_string();
     let content: Post = db.run(move |conn| {
 	conn.query_row("SELECT title, submitted, markdown FROM posts WHERE username = ?1 AND id = ?2", params![username, id],
 		       |r| Ok(Post {
@@ -48,7 +49,11 @@ async fn blog_post(db: Db, username: String, id: u64) -> Option<RawHtml<String>>
 		       }))
     }).await.ok()?;
 
-    Some(RawHtml(markdown(&(content.markdown? + "\n"))))
+    if content_type.eq("html") {
+	Some(RawHtml(markdown(&(content.markdown? + "\n"))))
+    } else {
+	Some(RawHtml(content.markdown?))
+    }
 }
 
 #[post("/<username>", data = "<post>")]
@@ -88,16 +93,40 @@ async fn new_blog_post_form(db: Db, username: User, post: Form<Post>) -> Option<
 }
 
 #[put("/<id>", data = "<content>")]
-async fn update_post(db: Db, user: User, id: u64, content: &str) -> Option<Redirect> {
+async fn update_post(db: Db, user: User, id: u64, content: &str) -> Option<RawHtml<String>> {
     if !user.1 {
 	return None
     }
     
     let username: String = user.0.to_string();
     let db_content: String = content.to_string();
-    let _affected = db.run(move |conn| {
+    let affected = db.run(move |conn| {
 	conn.execute("UPDATE posts SET markdown = ?1 WHERE username = ?2 AND id = ?3",
 		     params![db_content, username, id])
+    }).await;
+
+    let updated: bool = match affected {
+	Ok(updated) => updated == 1,
+	Err(err) => {println!("update failed: {}", err); false}
+    };
+
+    if updated {
+	Some(RawHtml(content.to_string()))
+    } else {
+	None
+    }
+}
+
+#[delete("/<id>")]
+async fn delete_post(db: Db, user: User, id: u64) -> Option<Redirect> {
+    if !user.1 {
+	return None
+    }
+
+    let username: String = user.0.to_string();
+    let _affected = db.run(move |conn| {
+	conn.execute("DELETE FROM posts WHERE username = ?1 AND id = ?2",
+		     params![username, id])
     }).await;
 
     Some(Redirect::to("/blog"))
@@ -105,6 +134,6 @@ async fn update_post(db: Db, user: User, id: u64, content: &str) -> Option<Redir
 
 pub fn stage() -> AdHoc {
     AdHoc::on_ignite("Blog Stage", |rocket| async {
-        rocket.mount("/blog", routes![blog_posts, blog_post, new_blog_post, new_blog_post_form, update_post])
+        rocket.mount("/blog", routes![blog_posts, blog_post, new_blog_post, new_blog_post_form, update_post, delete_post])
     })
 }

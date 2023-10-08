@@ -91,7 +91,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/edit" element={<Edit />} />
-            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog" element={<Blog loggedIn={loggedIn} />} />
             <Route path="/new" element={<NewPost />} />
             <Route path="/images" element={<Images />} />
             <Route path="/upload" element={<Upload />} />

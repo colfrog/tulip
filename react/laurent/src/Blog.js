@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import { postURL } from './postURL';
 import './blog.css';
 
-function Post(props) {
+function Post({post, currentPost, loggedIn}) {
     let [content, setContent] = useState('');
     let [showContent, setShowContent] = useState(false);
     let fetchContent = () => {
-        fetch(`/blog/laurent/${props.post.id}`)
+        fetch(`/blog/${post.id}?content_type=html`)
 	    .then(response => response.text())
 	    .then(html => setContent(html));
     };
@@ -18,43 +19,59 @@ function Post(props) {
     };
 
     useEffect(() => {
-        if (props.currentPost === props.post.title) {
+        if (currentPost === post.title) {
             setShowContent(true);
             if (!content)
                 fetchContent();
         } else {
             setShowContent(false);
         }
-    }, [props.currentPost]);
+    }, [currentPost]);
 
     useEffect(() => {
-        if (!showContent && window.location.href.endsWith(`#${postURL(props.post.title)}`)) {
+        if (!showContent && window.location.href.endsWith(`#${postURL(post.title)}`)) {
             setShowContent(true);
             fetchContent();
         }
     }, []);
 
+    let buttons = null;
+    if (loggedIn) {
+        let deletePost = () => fetch(`/blog/${post.id}`, {method: "DELETE"})
+            .then(response => window.location.reload(false));
+        buttons = <>
+                    <Link to={`/edit?post=${post.id}`}>
+                      <button className="post-button">edit</button>
+                    </Link>
+                    <button className="post-button" onClick={deletePost}>delete</button>
+                  </>;
+    }
+
     let article = null;
     if (showContent)
-        article = <article className="post-content"
-                           dangerouslySetInnerHTML={{ __html: content }}>
+        article = <article className="post-content">
+                    <div dangerouslySetInnerHTML={{ __html: content }}>
+                    </div>
+                    <div style={{
+                        textAlign: "right"
+                    }}>{buttons}</div>
                   </article>;
-
+    
     useEffect(() => {
         if (showContent)
-            window.location.href = `#${postURL(props.post.title)}`;
+            window.location.href = `#${postURL(post.title)}`;
     });
 
     return (
-        <div id={postURL(props.post.title)} className="post">
-          <h1 onClick={togglePost}>{props.post.title}</h1>
-          <h5>{props.post.submitted}</h5>
+        <div id={postURL(post.title)} className="post">
+          <h1 onClick={togglePost}>{post.title}</h1>
+          <h5>{post.submitted}</h5>
           {article}
         </div>
     );
 }
 
-export function Blog() {
+export function Blog({loggedIn}) {
     let [asideList, setAsideList] = useState([]);
     let [postList, setPostList] = useState([]);
     let [postObjList, setPostObjList] = useState([]);
@@ -71,7 +88,7 @@ export function Blog() {
         let list = [];
         let sideList = [];
 	posts.forEach(post => {
-            list.push(<Post post={post} currentPost={currentPost} key={post.id} />);
+            list.push(<Post post={post} currentPost={currentPost} key={post.id} loggedIn={loggedIn} />);
 	    sideList.push(<h5 onClick={() => togglePost(post.title)} key={post.id}>{post.title}</h5>);
 	});
 
@@ -87,7 +104,7 @@ export function Blog() {
                 setPostObjList(json);
 	    });
     }, []);
-    useEffect(() => buildPostList(postObjList), [currentPost]);
+    useEffect(() => buildPostList(postObjList), [currentPost, loggedIn]);
 
     return (
         <main id="blog-main">

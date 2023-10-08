@@ -39,6 +39,10 @@
     color: black;
 }
 
+.post-button {
+    margin: 4px;
+}
+
 .post-content img {
     display: block;
     object-fit: contain;
