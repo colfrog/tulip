@@ -87,8 +87,24 @@ async fn new_blog_post_form(db: Db, username: User, post: Form<Post>) -> Option<
     Some(Redirect::to("/blog"))
 }
 
+#[put("/<id>", data = "<content>")]
+async fn update_post(db: Db, user: User, id: u64, content: &str) -> Option<Redirect> {
+    if !user.1 {
+	return None
+    }
+    
+    let username: String = user.0.to_string();
+    let db_content: String = content.to_string();
+    let _affected = db.run(move |conn| {
+	conn.execute("UPDATE posts SET markdown = ?1 WHERE username = ?2 AND id = ?3",
+		     params![db_content, username, id])
+    }).await;
+
+    Some(Redirect::to("/blog"))
+}
+
 pub fn stage() -> AdHoc {
     AdHoc::on_ignite("Blog Stage", |rocket| async {
-        rocket.mount("/blog", routes![blog_posts, blog_post, new_blog_post, new_blog_post_form])
+        rocket.mount("/blog", routes![blog_posts, blog_post, new_blog_post, new_blog_post_form, update_post])
     })
 }
