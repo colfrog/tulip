@@ -12,7 +12,7 @@ function CharacterImageList({character}) {
                 width: "240px",
                 height: "auto",
                 margin: "24px"
-            }} src={`/i/raven/${image}`} alt={image} key={index} />);
+            }} src={`/i/${image}`} alt={image} key={index} />);
 	});
         setImageList(list);
     };
@@ -65,7 +65,7 @@ function Character({name, image, description, onClick}) {
               width: "100%",
               height: "auto",
               objectFit: "contain"
-          }} src={`/i/raven/${image}`} alt={`${name}: ${description}`}
+          }} src={`/i/${image}`} alt={`${name}: ${description}`}
                onClick={onClick}></img>
           <div dangerouslySetInnerHTML={{ __html: description }}></div>
         </div>

@@ -5,7 +5,7 @@ export function Upload() {
     let [file, setFile] = useState(null);
     let uploadFile = () => {
         if (id && file) {
-            fetch(`/i/raven/${id}`, {
+            fetch(`/i/${id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "image/png"

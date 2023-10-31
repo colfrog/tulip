@@ -15,42 +15,41 @@ use super::{Db, Result, User};
 #[response(content_type = "image/png")]
 struct Image(Vec<u8>);
 
-#[get("/all/<username>")]
-async fn get_images(db: Db, username: String) -> Option<Json<Vec<String>>> {
+#[get("/all")]
+async fn get_images(db: Db, _user: User) -> Option<Json<Vec<String>>> {
     let images: Vec<String> = db.run(move |conn| {
 	conn.prepare("SELECT id FROM images WHERE username = ?1")?
-	    .query_map(params![username], |row| row.get(0))?
+	    .query_map(params![_user.0], |row| row.get(0))?
 	    .collect::<Result<Vec<String>, _>>()
     }).await.ok()?;
 
     Some(Json(images))
 }
 
-#[get("/<username>/<id>")]
-async fn get_image(db: Db, username: String, id: String) -> Option<Image> {
+#[get("/<id>")]
+async fn get_image(db: Db, _user: User, id: String) -> Option<Image> {
     let image: Image = db.run(move |conn| {
 	conn.query_row("SELECT image FROM images WHERE username = ?1 AND id = ?2",
-		     params![username, id],
+		     params![_user.0, id],
 		     |row| Ok(Image(row.get(0)?)))
     }).await.ok()?;
 
     Some(image)
 }
 
-#[post("/<username>/<id>", data = "<image>")]
-async fn post_image(db: Db, _user: User, username: String, id: String, image: Vec<u8>) -> Option<String> {
+#[post("/<id>", data = "<image>")]
+async fn post_image(db: Db, _user: User, id: String, image: Vec<u8>) -> Option<String> {
     if !_user.1 {
 	return None
     }
     
-    let db_username = username.clone();
     let db_id = id.clone();
     db.run(move |conn| {
 	conn.execute("INSERT INTO images (username, id, image) VALUES (?1, ?2, ?3)",
-		     params![db_username, db_id, image])
+		     params![_user.0, db_id, image])
     }).await.ok()?;
 
-    Some(format!("/i/{}/{}", username, id))
+    Some(format!("/i/{}", id))
 }
 
 #[derive(FromForm)]
@@ -61,36 +60,34 @@ struct ImageForm<'r> {
     file: TempFile<'r>
 }
 
-#[post("/<username>", data = "<image>")]
-async fn post_image_form(db: Db, _user: User, username: String, image: Form<ImageForm<'_>>) -> Option<String> {
+#[post("/", data = "<image>")]
+async fn post_image_form(db: Db, _user: User, image: Form<ImageForm<'_>>) -> Option<String> {
     if !_user.1 {
 	return None
     }
-    
-    let db_username = username.clone();
+
     let id = image.id.to_string();
     let mut file = File::open(image.file.path().unwrap()).ok()?;
     let mut content = Vec::new();
     file.read_to_end(&mut content).ok()?;
     db.run(move |conn| {
 	conn.execute("INSERT INTO images (username, id, image) VALUES (?1, ?2, ?3)",
-		     params![db_username, id, content])
+		     params![_user.0, id, content])
     }).await.ok()?;
 
-    Some(format!("/i/{}/{}", username, image.id))
+    Some(format!("/i/{}", image.id))
 }
 
-#[delete("/<username>/<id>")]
-async fn delete_image(db: Db, _user: User, username: String, id: String) -> Option<Redirect> {
+#[delete("/<id>")]
+async fn delete_image(db: Db, _user: User, id: String) -> Option<Redirect> {
     if !_user.1 {
 	return None
     }
-    
-    let db_username = username.clone();
+
     let db_id = id.clone();
     db.run(move |conn| {
 	conn.execute("DELETE FROM images WHERE username = ?1 AND id = ?2",
-		     params!(db_username, db_id))
+		     params!(_user.0, db_id))
     }).await.ok()?;
 
     Some(Redirect::to("/images"))

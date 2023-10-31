@@ -16,7 +16,7 @@ export function Edit() {
     };
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/home/raven?content_type=markdown")
+        fetch("/home/raven?content_type=markdown")
             .then(response => response.text())
             .then(text => setContent(text));
     }, []);

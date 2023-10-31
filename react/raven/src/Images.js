@@ -8,7 +8,7 @@ function ImageEntry({imageId}) {
     return (
         <div class="image-view">
           <div id={postURL(imageId)} class="image">
-            <Image src={`/i/raven/${imageId}`} alt={imageId} />
+            <Image src={`/i/${imageId}`} alt={imageId} />
             <h5>{imageId}</h5>
           </div>
 
@@ -35,7 +35,7 @@ export function Images() {
     let [imageList, setImageList] = useState([]);
 
     useEffect(() => {
-        fetch("/i/all/raven")
+        fetch("/i/all")
             .then(response => response.json())
             .then(json => {
 	        let list = [];

@@ -45,7 +45,7 @@ function Category({name, images}) {
             margin: "24px"
         };
         images.forEach((image, index) => {
-            list.push(<Image style={imageStyle} src={`/i/raven/${image}`} alt={image} />);
+            list.push(<Image style={imageStyle} src={`/i/${image}`} alt={image} />);
         });
         setImageList(list);
     }, []);
