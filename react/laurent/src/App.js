@@ -21,9 +21,9 @@ function Header({loggedIn}) {
 	    <img src="/images/head.jpg" alt="My face" />
           </a>
           <div id="headerText">
-	    <h1>Laurent</h1>
+	    <h1>Laurent Cimon</h1>
 	    <h4>Full-Stack Developer</h4>
-	    <p>Rust | C++ | Python | React</p>
+	    <p>Rust | C++ | Lisp | Python | React</p>
           </div>
           <div id="icons">
 	    <a style={{marginBottom: "4px"}} href="https://github.com/colfrog">
