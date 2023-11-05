@@ -9,3 +9,16 @@
 #home-content p {
     margin: 10px;
 }
+
+#home-content img {
+    display: block;
+    width: 50%;
+    height: auto;
+    margin: 20px auto;
+}
+
+@media screen and (max-width: 800px) {
+    #home-content img {
+	width: 100%;
+    }
+}
