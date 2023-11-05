@@ -7,19 +7,10 @@
 }
 
 #home-content p {
-    display: flex;
-    align-items: center;
     margin: 10px;
 }
 
-#home-content > p img {
-    display: inline-block;
-    max-height: 100px;
-    width: auto;
-    margin: auto 4px;
-}
-
-#home-content > h1 img {
+#home-content img {
     display: block;
     max-width: 50%;
     height: auto;
