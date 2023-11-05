@@ -83,3 +83,7 @@ main {
     color: #dcdccc;
     overflow: scroll;
 }
+
+main::-webkit-scrollbar {
+    display: none;
+}

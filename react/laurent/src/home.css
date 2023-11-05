@@ -1,5 +1,6 @@
 #home-content {
-    margin: 5% 5%;
+    min-height: calc(90% - 100px);
+    margin: 2%;
     padding: 50px 5%;
     background-color: grey;
     border-radius: 7px;
