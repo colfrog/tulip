@@ -23,7 +23,7 @@ function Header({loggedIn}) {
           <div id="headerText">
 	    <h1>Laurent</h1>
 	    <h4>Full-Stack Developer</h4>
-	    <p>Rust | C++ | Lisp | Python | React</p>
+	    <small>Rust | Lisp | Python | React</small>
           </div>
           <div id="icons">
 	    <a style={{marginBottom: "4px"}} href="https://github.com/colfrog">
