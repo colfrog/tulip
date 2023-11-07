@@ -141,6 +141,21 @@ main h5 img {
     object-fit: contain;
 }
 
+@media screen and (max-width: 800px) {
+    main h2 img {
+	max-width: 100%;
+    }
+    main h3 img {
+	max-width: 100%;
+    }
+    main h4 img {
+	max-width: 100%;
+    }
+    main h5 img {
+	max-width: 100%;
+    }
+}
+
 main::-webkit-scrollbar {
     display: none;
 }
