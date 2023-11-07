@@ -85,11 +85,20 @@ main {
     scrollbar-width: none;
 }
 
-main p img {
+#home-content p img {
     display: inline-block;
     max-height: 24px;
     width: auto;
     margin: auto 4px;
+    object-fit: contain;
+}
+
+.post-content p img {
+    display: inline-block;
+    max-height: 24px;
+    width: auto;
+    margin: auto 4px;
+    object-fit: contain;
 }
 
 main h1 img {
