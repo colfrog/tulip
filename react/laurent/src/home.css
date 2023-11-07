@@ -10,20 +10,6 @@
     margin: 10px;
 }
 
-#home-content > p img {
-    display: inline-block;
-    max-height: 50px;
-    width: auto;
-    margin: auto 4px;
-}
-
-#home-content > h1 img {
-    display: block;
-    max-width: 50%;
-    height: auto;
-    margin: 20px auto;
-}
-
 @media screen and (max-width: 800px) {
     #home-content img {
 	width: 100%;

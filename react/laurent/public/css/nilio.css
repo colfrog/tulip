@@ -82,6 +82,54 @@ main {
     background-color: #123453;
     color: #dcdccc;
     overflow: scroll;
+    scrollbar-width: none;
+}
+
+main p img {
+    display: inline-block;
+    max-height: 50px;
+    width: auto;
+    margin: auto 4px;
+}
+
+main h1 img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 20px auto;
+    object-fit: contain;
+}
+
+main h2 img {
+    display: block;
+    max-width: 70%;
+    height: auto;
+    margin: 20px auto;
+    object-fit: contain;
+}
+
+main h3 img {
+    display: block;
+    max-width: 50%;
+    height: auto;
+    margin: 20px auto;
+    object-fit: contain;
+}
+
+main h4 img {
+    display: block;
+    max-width: 40%;
+    height: auto;
+    margin: 20px auto;
+    object-fit: contain;
+}
+
+main h5 img {
+    display: block;
+    max-width: 30%;
+    height: auto;
+    margin: 20px auto;
+    object-fit: contain;
 }
 
 main::-webkit-scrollbar {

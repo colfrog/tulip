@@ -55,15 +55,6 @@
     margin: 4px;
 }
 
-.post-content img {
-    display: block;
-    object-fit: contain;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    margin: auto;
-}
-
 .post {
     background-color: teal;
     display: flex;
